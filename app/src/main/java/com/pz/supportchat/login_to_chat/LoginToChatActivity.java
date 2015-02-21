@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -95,7 +94,6 @@ public class LoginToChatActivity extends InjectableActivity {
 
     @Subscribe
     protected void onConnectionStatusChange(final XMPPConnectionStatus status) {
-        Log.d(LOG_TAG, "New status: " + status.mStatus);
         buttonJoin.setEnabled(
                 !StringUtils.equals(status.mStatus, PostingConnectionChangeListener.DISCONNECTED));
     }
