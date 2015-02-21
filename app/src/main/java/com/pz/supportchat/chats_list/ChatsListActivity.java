@@ -14,8 +14,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.Random;
-
 import javax.inject.Inject;
 
 import butterknife.InjectView;
@@ -45,16 +43,11 @@ public class ChatsListActivity extends InjectableActivity {
     }
 
     private void sendNewMessage() {
-        Random random = new Random();
-
         final Message newMessage = new Message(nickname, editTextInputMessage.getText().toString(),
-                isEven(random.nextInt(100)));
+                true);
+        
         messagesListAdapter.updateWithMessage(newMessage);
         messagesListAdapter.notifyDataSetChanged();
-    }
-
-    private boolean isEven(int random) {
-        return (random % 2) == 0;
     }
 
     @Override
