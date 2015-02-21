@@ -9,7 +9,7 @@ import android.net.ConnectivityManager;
 
 import javax.inject.Inject;
 
-public class NetworkChangeReciever extends BroadcastReceiver {
+public class NetworkChangeReceiver extends BroadcastReceiver {
     public enum InternetConnectionStatus {
         CONNECTED,
         DISCONNECTED

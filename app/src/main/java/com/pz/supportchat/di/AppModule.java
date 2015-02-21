@@ -3,7 +3,7 @@ package com.pz.supportchat.di;
 import com.halfbit.tinybus.Bus;
 import com.halfbit.tinybus.TinyBus;
 import com.pz.supportchat.App;
-import com.pz.supportchat.NetworkChangeReciever;
+import com.pz.supportchat.NetworkChangeReceiver;
 import com.pz.supportchat.PostingConnectionChangeListener;
 
 import android.app.Application;
@@ -19,7 +19,7 @@ import dagger.Provides;
         XMPPModule.class
         },injects = {
         App.class,
-        NetworkChangeReciever.class,
+        NetworkChangeReceiver.class,
         PostingConnectionChangeListener.class
 })
 final class AppModule {

@@ -29,12 +29,17 @@
             android:name=".chat.CurrentChatActivity"
             android:label="@string/current_chat"/>
 
-
         <service
             android:name=".xmpp.ChatService"
             android:enabled="true"
             android:exported="false" >
         </service>
+        
+        <receiver android:name=".NetworkChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
