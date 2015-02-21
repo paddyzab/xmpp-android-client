@@ -32,6 +32,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.1.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
     compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'com.google.guava:guava:18.0'
 
     // XMPP dependencies
     compile 'org.igniterealtime.smack:smack-tcp:4.1.0-beta2'
