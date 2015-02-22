@@ -1,5 +1,11 @@
 package com.pz.supportchat.login_to_chat;
 
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import com.halfbit.tinybus.Bus;
 import com.halfbit.tinybus.Subscribe;
 import com.pz.supportchat.InjectableActivity;
@@ -8,48 +14,49 @@ import com.pz.supportchat.PostingConnectionChangeListener;
 import com.pz.supportchat.R;
 import com.pz.supportchat.xmpp.ChatManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
-
+import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
-
-import javax.inject.Inject;
-
-import butterknife.InjectView;
-import butterknife.OnClick;
-
 import static com.pz.supportchat.PostingConnectionChangeListener.XMPPConnectionStatus;
 
 
 public class LoginToChatActivity extends InjectableActivity {
 
     private final String LOG_TAG = LoginToChatActivity.class.getSimpleName();
-    
+
     @Inject
     protected Intents intents;
-    
+
     @Inject
     protected XMPPConnectionProvider mXMPPConnectionProvider;
-    
+
     @Inject
     protected ChatManager mChatManager;
 
     @Inject
     protected Bus mBus;
 
+    @Inject
+    protected PostingConnectionChangeListener mPostingConnectionChangeListener;
+
     @InjectView(R.id.editTextLogin)
     protected EditText editTextPickNickname;
 
     @InjectView(R.id.editTextPassword)
     protected EditText editTextPassword;
-    
+
     @InjectView(R.id.buttonJoin)
     protected Button buttonJoin;
-    
-    private XMPPTCPConnection mConnection;
+
+    @InjectView(R.id.imageViewConnectionStatus)
+    protected ImageView imageViewConnectionStatus;
+
+    @OnClick(R.id.layoutConnectionStatus)
+    protected void reconnect() {
+        if (!mConnection.isConnected()) {
+            mChatManager.connect(mConnection, mPostingConnectionChangeListener);
+        }
+    }
 
     @OnClick(R.id.buttonJoin)
     protected void clickJoin() {
@@ -61,15 +68,17 @@ public class LoginToChatActivity extends InjectableActivity {
         }
     }
 
+    private XMPPTCPConnection mConnection;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startService(intents.getChatServiceIntent(LoginToChatActivity.this));
-        
+
         editTextPickNickname.setText("paddy");
         editTextPassword.setText("wiosna");
         mConnection = mXMPPConnectionProvider.getConnection();
-        
+
         buttonJoin.setEnabled(mConnection.isConnected());
 
         mBus.register(LoginToChatActivity.class);
@@ -86,9 +95,13 @@ public class LoginToChatActivity extends InjectableActivity {
     @Subscribe
     protected void onConnectionStatusChange(final XMPPConnectionStatus status) {
         buttonJoin.setEnabled(
-                !StringUtils.equals(status.mStatus, PostingConnectionChangeListener.DISCONNECTED));
+                !StringUtils.equals(status.mStatus, PostingConnectionChangeListener.CONNECTED));
+
+        imageViewConnectionStatus.setBackgroundColor(StringUtils.equals(status.mStatus, PostingConnectionChangeListener.CONNECTED)
+                ? getResources().getColor(R.color.green)
+                : getResources().getColor(R.color.red));
     }
-    
+
     @Override
     public int getLayoutResource() {
         return R.layout.login_to_chat;
@@ -102,7 +115,7 @@ public class LoginToChatActivity extends InjectableActivity {
                     intents.getChatsListIntent(this, editTextPickNickname.getText().toString()));
         }
     }
-    
+
     private boolean validateNick() {
         return StringUtils.isNotEmpty(editTextPickNickname.getText().toString()) && StringUtils
                 .isNotEmpty(editTextPassword.getText().toString());
