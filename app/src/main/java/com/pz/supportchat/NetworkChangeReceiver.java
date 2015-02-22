@@ -1,6 +1,6 @@
 package com.pz.supportchat;
 
-import com.halfbit.tinybus.Bus;
+import com.squareup.otto.Bus;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

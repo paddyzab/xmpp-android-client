@@ -1,22 +1,28 @@
 package com.pz.supportchat.login_to_chat;
 
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import butterknife.InjectView;
-import butterknife.OnClick;
-import com.halfbit.tinybus.Bus;
-import com.halfbit.tinybus.Subscribe;
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.PostingConnectionChangeListener;
 import com.pz.supportchat.R;
 import com.pz.supportchat.xmpp.ChatManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
-import javax.inject.Inject;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+
+import javax.inject.Inject;
+
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 import static com.pz.supportchat.PostingConnectionChangeListener.XMPPConnectionStatus;
 
 
@@ -81,7 +87,7 @@ public class LoginToChatActivity extends InjectableActivity {
 
         buttonJoin.setEnabled(mConnection.isConnected());
 
-        mBus.register(LoginToChatActivity.class);
+        mBus.register(this);
 
         buttonJoin.setEnabled(true);
     }
@@ -89,17 +95,20 @@ public class LoginToChatActivity extends InjectableActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mBus.unregister(LoginToChatActivity.class);
+        mBus.unregister(this);
     }
 
     @Subscribe
-    protected void onConnectionStatusChange(final XMPPConnectionStatus status) {
+    public void onConnectionStatusChange(final XMPPConnectionStatus status) {
         buttonJoin.setEnabled(
                 !StringUtils.equals(status.mStatus, PostingConnectionChangeListener.CONNECTED));
 
-        imageViewConnectionStatus.setBackgroundColor(StringUtils.equals(status.mStatus, PostingConnectionChangeListener.CONNECTED)
-                ? getResources().getColor(R.color.green)
-                : getResources().getColor(R.color.red));
+        imageViewConnectionStatus.setBackgroundResource(
+                StringUtils.equals(status.mStatus, PostingConnectionChangeListener.CONNECTED)
+                        ? getResources().getColor(R.color.green)
+                        : getResources().getColor(R.color.red));
+        
+        Log.d("SMACK", "ACTIVITY --> new status: " + status.mStatus);
     }
 
     @Override

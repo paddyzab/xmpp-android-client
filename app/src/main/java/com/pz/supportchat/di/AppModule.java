@@ -1,10 +1,9 @@
 package com.pz.supportchat.di;
 
-import com.halfbit.tinybus.Bus;
-import com.halfbit.tinybus.TinyBus;
 import com.pz.supportchat.App;
 import com.pz.supportchat.NetworkChangeReceiver;
 import com.pz.supportchat.PostingConnectionChangeListener;
+import com.squareup.otto.Bus;
 
 import android.app.Application;
 
@@ -38,6 +37,6 @@ final class AppModule {
     @Provides 
     @Singleton
     Bus provideBus() {
-        return TinyBus.from(app);
+        return new Bus();
     }
 }

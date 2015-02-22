@@ -1,7 +1,7 @@
 package com.pz.supportchat;
 
 
-import com.halfbit.tinybus.Bus;
+import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPConnection;
@@ -32,7 +32,7 @@ public class PostingConnectionChangeListener implements ConnectionListener {
 
     @Override
     public void connected(XMPPConnection connection) {
-        Log.d(LOG_TAG, "new connection: " + connection.isConnected());
+        Log.d("SMACK", "BUS -- > new connection: " + CONNECTED);
         mBus.post(new XMPPConnectionStatus(CONNECTED));
     }
 
