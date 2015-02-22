@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class ChatsListActivity extends InjectableActivity {
+public class ChatActivity extends InjectableActivity {
 
     @Inject
     protected Intents intents;
@@ -46,7 +46,7 @@ public class ChatsListActivity extends InjectableActivity {
         if (validateMessage()) {
             sendNewMessage();
         } else {
-            Toast.makeText(ChatsListActivity.this, "Add a message", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChatActivity.this, "Add a message", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -70,11 +70,11 @@ public class ChatsListActivity extends InjectableActivity {
         final Bundle extras = getIntent().getExtras();
         if (extras != null) {
             nickname = extras.getString(Intents.NICKNAME_KEY);
-            Toast.makeText(ChatsListActivity.this, "Welcome: " + nickname, Toast.LENGTH_SHORT)
+            Toast.makeText(ChatActivity.this, "Welcome: " + nickname, Toast.LENGTH_SHORT)
                     .show();
         }
 
-        messagesListAdapter = new MessagesListAdapter(ChatsListActivity.this,
+        messagesListAdapter = new MessagesListAdapter(ChatActivity.this,
                 Lists.<Message>newArrayList());
         listViewMessages.setAdapter(messagesListAdapter);
 

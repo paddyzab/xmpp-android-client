@@ -1,7 +1,7 @@
 package com.pz.supportchat;
 
 import com.pz.supportchat.chat.CurrentChatActivity;
-import com.pz.supportchat.chats_list.ChatsListActivity;
+import com.pz.supportchat.chats_list.ChatActivity;
 import com.pz.supportchat.xmpp.ChatService;
 
 import android.app.Activity;
@@ -18,7 +18,7 @@ final public class Intents {
     }
 
     public Intent getChatsListIntent(final Activity from, final String nickname) {
-        final Intent intent = new Intent(from, ChatsListActivity.class);
+        final Intent intent = new Intent(from, ChatActivity.class);
         intent.putExtra(NICKNAME_KEY, nickname);
         
         return intent;
