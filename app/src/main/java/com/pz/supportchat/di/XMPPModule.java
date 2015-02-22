@@ -2,6 +2,7 @@ package com.pz.supportchat.di;
 
 import com.pz.supportchat.xmpp.ChatManager;
 import com.pz.supportchat.xmpp.ChatService;
+import com.pz.supportchat.xmpp.RosterManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 
 import javax.inject.Singleton;
@@ -14,6 +15,7 @@ import dagger.Provides;
                 XMPPConnectionProvider.class,
                 ChatService.class,
                 ChatManager.class,
+                RosterManager.class
         },
         complete = false,
         library = true
@@ -30,5 +32,11 @@ final class XMPPModule {
     @Singleton
     ChatManager provideChatManager() {
         return new ChatManager();
+    }
+
+    @Provides
+    @Singleton
+    RosterManager provideRosterManager() {
+        return new RosterManager();
     }
 }

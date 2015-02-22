@@ -61,15 +61,6 @@ public class LoginToChatActivity extends InjectableActivity {
         }
     }
 
-    private void loginAndStartChat() {
-        mChatManager.login(mConnection, editTextPickNickname.getText().toString(), editTextPassword.getText().toString());
-        
-        if (mConnection.isAuthenticated()) {
-            startActivity(
-                    intents.getChatsListIntent(this, editTextPickNickname.getText().toString()));
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +94,15 @@ public class LoginToChatActivity extends InjectableActivity {
         return R.layout.login_to_chat;
     }
 
+    private void loginAndStartChat() {
+        mChatManager.login(mConnection, editTextPickNickname.getText().toString(), editTextPassword.getText().toString());
+
+        if (mConnection.isAuthenticated()) {
+            startActivity(
+                    intents.getChatsListIntent(this, editTextPickNickname.getText().toString()));
+        }
+    }
+    
     private boolean validateNick() {
         return StringUtils.isNotEmpty(editTextPickNickname.getText().toString()) && StringUtils
                 .isNotEmpty(editTextPassword.getText().toString());

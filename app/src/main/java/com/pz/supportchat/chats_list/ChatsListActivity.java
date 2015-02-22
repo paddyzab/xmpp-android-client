@@ -6,6 +6,8 @@ import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.R;
 import com.pz.supportchat.commons.models.Message;
+import com.pz.supportchat.xmpp.RosterManager;
+import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,6 +26,12 @@ public class ChatsListActivity extends InjectableActivity {
     @Inject
     protected Intents intents;
 
+    @Inject
+    protected XMPPConnectionProvider mXMPPConnectionProvider;
+    
+    @Inject
+    protected RosterManager mRosterManager;
+    
     @InjectView(R.id.listViewMessages)
     protected ListView listViewMessages;
 
