@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -93,6 +92,15 @@ public class LoginToChatActivity extends InjectableActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        buttonJoin.setEnabled(mConnection.isConnected());
+        imageViewConnectionStatus.setBackgroundColor(mConnection.isConnected()
+                ? getResources().getColor(R.color.green)
+                : getResources().getColor(R.color.red));
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mBus.unregister(this);
@@ -101,14 +109,12 @@ public class LoginToChatActivity extends InjectableActivity {
     @Subscribe
     public void onConnectionStatusChange(final XMPPConnectionStatus status) {
         buttonJoin.setEnabled(
-                !StringUtils.equals(status.mStatus, PostingConnectionChangeListener.CONNECTED));
+                !StringUtils.equals(status.mStatus, PostingConnectionChangeListener.DISCONNECTED));
 
-        imageViewConnectionStatus.setBackgroundResource(
+        imageViewConnectionStatus.setBackgroundColor(
                 StringUtils.equals(status.mStatus, PostingConnectionChangeListener.CONNECTED)
                         ? getResources().getColor(R.color.green)
                         : getResources().getColor(R.color.red));
-        
-        Log.d("SMACK", "ACTIVITY --> new status: " + status.mStatus);
     }
 
     @Override
@@ -117,7 +123,8 @@ public class LoginToChatActivity extends InjectableActivity {
     }
 
     private void loginAndStartChat() {
-        mChatManager.login(mConnection, editTextPickNickname.getText().toString(), editTextPassword.getText().toString());
+        mChatManager.login(mConnection, editTextPickNickname.getText().toString(),
+                editTextPassword.getText().toString());
 
         if (mConnection.isAuthenticated()) {
             startActivity(

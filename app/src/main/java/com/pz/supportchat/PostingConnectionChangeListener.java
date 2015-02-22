@@ -7,7 +7,6 @@ import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPConnection;
 
 import android.content.Context;
-import android.util.Log;
 
 import javax.inject.Inject;
 
@@ -32,7 +31,6 @@ public class PostingConnectionChangeListener implements ConnectionListener {
 
     @Override
     public void connected(XMPPConnection connection) {
-        Log.d("SMACK", "BUS -- > new connection: " + CONNECTED);
         mBus.post(new XMPPConnectionStatus(CONNECTED));
     }
 

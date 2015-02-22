@@ -1,6 +1,7 @@
 package com.pz.supportchat.di;
 
 import com.pz.supportchat.App;
+import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.NetworkChangeReceiver;
 import com.pz.supportchat.PostingConnectionChangeListener;
 import com.squareup.otto.Bus;
@@ -37,6 +38,6 @@ final class AppModule {
     @Provides 
     @Singleton
     Bus provideBus() {
-        return new Bus();
+        return new MainThreadBus();
     }
 }
