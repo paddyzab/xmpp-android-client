@@ -3,17 +3,17 @@ package com.pz.supportchat.commons.models;
 import java.util.List;
 
 public class Messages {
-    private List<Message> messages;
+    private List<InternalMessage> mInternalMessages;
 
-    public Messages(List<Message> messages) {
-        this.messages = messages;
+    public Messages(List<InternalMessage> internalMessages) {
+        this.mInternalMessages = internalMessages;
     }
 
-    public Message get(int position) {
-        return messages.get(position);
+    public InternalMessage get(int position) {
+        return mInternalMessages.get(position);
     }
 
     public int size() {
-        return messages.size();
+        return mInternalMessages.size();
     }
 }

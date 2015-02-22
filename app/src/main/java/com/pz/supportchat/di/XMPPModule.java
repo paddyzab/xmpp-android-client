@@ -1,6 +1,6 @@
 package com.pz.supportchat.di;
 
-import com.pz.supportchat.xmpp.ChatManager;
+import com.pz.supportchat.xmpp.ConnectionManager;
 import com.pz.supportchat.xmpp.ChatService;
 import com.pz.supportchat.xmpp.RosterManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
@@ -14,7 +14,7 @@ import dagger.Provides;
         injects = {
                 XMPPConnectionProvider.class,
                 ChatService.class,
-                ChatManager.class,
+                ConnectionManager.class,
                 RosterManager.class
         },
         complete = false,
@@ -30,8 +30,8 @@ final class XMPPModule {
     
     @Provides
     @Singleton
-    ChatManager provideChatManager() {
-        return new ChatManager();
+    ConnectionManager provideChatManager() {
+        return new ConnectionManager();
     }
 
     @Provides

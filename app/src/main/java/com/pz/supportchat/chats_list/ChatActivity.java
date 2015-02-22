@@ -5,11 +5,14 @@ import com.google.common.collect.Lists;
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.R;
-import com.pz.supportchat.commons.models.Message;
-import com.pz.supportchat.xmpp.RosterManager;
+import com.pz.supportchat.commons.models.InternalMessage;
+import com.pz.supportchat.xmpp.ConnectionManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jivesoftware.smack.chat.Chat;
+import org.jivesoftware.smack.chat.ChatMessageListener;
+import org.jivesoftware.smack.packet.Message;
 
 import android.os.Bundle;
 import android.widget.EditText;
@@ -21,16 +24,15 @@ import javax.inject.Inject;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class ChatActivity extends InjectableActivity {
+public class ChatActivity extends InjectableActivity implements ChatMessageListener {
 
-    @Inject
-    protected Intents intents;
+    private final static String EMPTY_STRING = "";
 
     @Inject
     protected XMPPConnectionProvider mXMPPConnectionProvider;
     
     @Inject
-    protected RosterManager mRosterManager;
+    protected ConnectionManager mConnectionManager;
     
     @InjectView(R.id.listViewMessages)
     protected ListView listViewMessages;
@@ -38,23 +40,35 @@ public class ChatActivity extends InjectableActivity {
     @InjectView(R.id.editTextInputMessage)
     protected EditText editTextInputMessage;
 
-    private String nickname;
+    private String currentUser;
     private MessagesListAdapter messagesListAdapter;
 
     @OnClick(R.id.buttonSend)
     protected void sendMessage() {
         if (validateMessage()) {
             sendNewMessage();
+            editTextInputMessage.setText(EMPTY_STRING);
         } else {
             Toast.makeText(ChatActivity.this, "Add a message", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void sendNewMessage() {
-        final Message newMessage = new Message(nickname, editTextInputMessage.getText().toString(),
+        final InternalMessage newInternalMessage = new InternalMessage(currentUser, editTextInputMessage.getText().toString(),
                 true);
+
+        mConnectionManager.sendMessage(mXMPPConnectionProvider.getConnection(), editTextInputMessage.getText().toString(),
+                currentUser, this);
         
-        messagesListAdapter.updateWithMessage(newMessage);
+        messagesListAdapter.updateWithMessage(newInternalMessage);
+        messagesListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void processMessage(final Chat chat, final Message message) {
+        final InternalMessage newInternalMessage = new InternalMessage(chat.getParticipant(), message.getBody(),
+                false);
+        messagesListAdapter.updateWithMessage(newInternalMessage); 
         messagesListAdapter.notifyDataSetChanged();
     }
 
@@ -69,13 +83,13 @@ public class ChatActivity extends InjectableActivity {
 
         final Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            nickname = extras.getString(Intents.NICKNAME_KEY);
-            Toast.makeText(ChatActivity.this, "Welcome: " + nickname, Toast.LENGTH_SHORT)
+            currentUser = extras.getString(Intents.NICKNAME_KEY);
+            Toast.makeText(ChatActivity.this, "Welcome: " + currentUser, Toast.LENGTH_SHORT)
                     .show();
         }
 
         messagesListAdapter = new MessagesListAdapter(ChatActivity.this,
-                Lists.<Message>newArrayList());
+                Lists.<InternalMessage>newArrayList());
         listViewMessages.setAdapter(messagesListAdapter);
 
         messagesListAdapter.notifyDataSetChanged();

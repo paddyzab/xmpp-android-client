@@ -24,7 +24,7 @@ public class ChatService extends Service {
     protected XMPPConnectionProvider mXMPPConnectionProvider;
 
     @Inject
-    protected ChatManager mChatManager;
+    protected ConnectionManager mConnectionManager;
 
     @Inject
     protected PostingConnectionChangeListener mPostingConnectionChangeListener;
@@ -49,9 +49,9 @@ public class ChatService extends Service {
         String action = intent.getAction();
 
         if (action.equals(CHAT_SERVICE_ACTION_START)) {
-            mChatManager.connect(mConnection, mPostingConnectionChangeListener);
+            mConnectionManager.connect(mConnection, mPostingConnectionChangeListener);
         } else if (action.equals(CHAT_SERVICE_ACTION_STOP)) {
-            mChatManager.disconnect(mConnection);
+            mConnectionManager.disconnect(mConnection);
         }
 
         return START_NOT_STICKY;

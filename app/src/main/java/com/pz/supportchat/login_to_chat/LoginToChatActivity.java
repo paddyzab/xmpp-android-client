@@ -4,7 +4,7 @@ import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.PostingConnectionChangeListener;
 import com.pz.supportchat.R;
-import com.pz.supportchat.xmpp.ChatManager;
+import com.pz.supportchat.xmpp.ConnectionManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -36,7 +36,7 @@ public class LoginToChatActivity extends InjectableActivity {
     protected XMPPConnectionProvider mXMPPConnectionProvider;
 
     @Inject
-    protected ChatManager mChatManager;
+    protected ConnectionManager mConnectionManager;
 
     @Inject
     protected Bus mBus;
@@ -59,7 +59,7 @@ public class LoginToChatActivity extends InjectableActivity {
     @OnClick(R.id.layoutConnectionStatus)
     protected void reconnect() {
         if (!mConnection.isConnected()) {
-            mChatManager.connect(mConnection, mPostingConnectionChangeListener);
+            mConnectionManager.connect(mConnection, mPostingConnectionChangeListener);
         }
     }
 
@@ -123,7 +123,7 @@ public class LoginToChatActivity extends InjectableActivity {
     }
 
     private void loginAndStartChat() {
-        mChatManager.login(mConnection, editTextPickNickname.getText().toString(),
+        mConnectionManager.login(mConnection, editTextPickNickname.getText().toString(),
                 editTextPassword.getText().toString());
 
         if (mConnection.isAuthenticated()) {
