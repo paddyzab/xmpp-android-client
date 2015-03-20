@@ -23,10 +23,6 @@
 
         <activity
             android:name=".current_chat.ChatActivity"
-            android:label="@string/chat_list"/>
-
-        <activity
-            android:name=".chat.CurrentChatActivity"
             android:label="@string/current_chat"/>
 
         <service

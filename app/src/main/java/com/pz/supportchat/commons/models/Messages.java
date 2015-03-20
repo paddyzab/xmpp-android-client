@@ -5,11 +5,11 @@ import java.util.List;
 public class Messages {
     private List<InternalMessage> mInternalMessages;
 
-    public Messages(List<InternalMessage> internalMessages) {
+    public Messages(final List<InternalMessage> internalMessages) {
         this.mInternalMessages = internalMessages;
     }
 
-    public InternalMessage get(int position) {
+    public InternalMessage get(final int position) {
         return mInternalMessages.get(position);
     }
 
