@@ -4,6 +4,7 @@ import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.PostingConnectionChangeListener;
 import com.pz.supportchat.R;
+import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
 import com.pz.supportchat.xmpp.ConnectionManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 import com.squareup.otto.Bus;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,6 +31,9 @@ public class LoginToChatActivity extends InjectableActivity {
 
     private final String LOG_TAG = LoginToChatActivity.class.getSimpleName();
 
+    private final String PASSWORD_KEY = "_password";
+    private final String LOGIN_KEY = "_login";
+
     @Inject
     protected Intents intents;
 
@@ -43,6 +48,9 @@ public class LoginToChatActivity extends InjectableActivity {
 
     @Inject
     protected PostingConnectionChangeListener mPostingConnectionChangeListener;
+
+    @Inject
+    protected SharedPreferencesKeyValueStorage mSharedPreferencesKeyValueStorage;
 
     @InjectView(R.id.editTextLogin)
     protected EditText editTextPickNickname;
@@ -68,6 +76,11 @@ public class LoginToChatActivity extends InjectableActivity {
         if (validateNick()) {
             editTextPickNickname.setError(null);
             loginAndStartChat();
+
+            mSharedPreferencesKeyValueStorage.storeString(LOGIN_KEY,
+                    editTextPickNickname.getText().toString());
+            mSharedPreferencesKeyValueStorage
+                    .storeString(PASSWORD_KEY, editTextPassword.getText().toString());
         } else {
             editTextPickNickname.setError("You need choose a nickname.");
         }
@@ -80,15 +93,12 @@ public class LoginToChatActivity extends InjectableActivity {
         super.onCreate(savedInstanceState);
         startService(intents.getChatServiceIntent(LoginToChatActivity.this));
 
-        editTextPickNickname.setText("paddy");
-        editTextPassword.setText("wiosna");
         mConnection = mXMPPConnectionProvider.getConnection();
-
         buttonJoin.setEnabled(mConnection.isConnected());
-
         mBus.register(this);
-
         buttonJoin.setEnabled(true);
+
+        restoreLoginCredentials();
     }
 
     @Override
@@ -135,5 +145,15 @@ public class LoginToChatActivity extends InjectableActivity {
     private boolean validateNick() {
         return StringUtils.isNotEmpty(editTextPickNickname.getText().toString()) && StringUtils
                 .isNotEmpty(editTextPassword.getText().toString());
+    }
+
+    private void restoreLoginCredentials() {
+        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage.getString(LOGIN_KEY))) {
+            editTextPickNickname.setText(mSharedPreferencesKeyValueStorage.getString(LOGIN_KEY));
+        }
+
+        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage.getString(PASSWORD_KEY))) {
+            editTextPassword.setText(mSharedPreferencesKeyValueStorage.getString(PASSWORD_KEY));
+        }
     }
 }
