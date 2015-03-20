@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+String server_address = 'SERVER_ADDRESS'
+String server_host = 'SERVER_HOST'
+String url_server_address = "\"192.168.0.5\""
+String url_server_host = "\"paddy.local\""
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -15,6 +20,13 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        develop {
+            buildConfigField "String", server_address, url_server_address
+            buildConfigField "String", server_host, url_server_host
         }
     }
 }
