@@ -22,7 +22,7 @@
         </activity>
 
         <activity
-            android:name=".chats_list.ChatActivity"
+            android:name=".current_chat.ChatActivity"
             android:label="@string/chat_list"/>
 
         <activity

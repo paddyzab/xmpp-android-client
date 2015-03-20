@@ -1,4 +1,4 @@
-package com.pz.supportchat.chats_list;
+package com.pz.supportchat.current_chat;
 
 import com.pz.supportchat.R;
 import com.pz.supportchat.commons.models.InternalMessage;

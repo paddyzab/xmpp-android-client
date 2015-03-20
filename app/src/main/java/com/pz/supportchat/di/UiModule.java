@@ -1,8 +1,7 @@
 package com.pz.supportchat.di;
 
 import com.pz.supportchat.Intents;
-import com.pz.supportchat.chat.CurrentChatActivity;
-import com.pz.supportchat.chats_list.ChatActivity;
+import com.pz.supportchat.current_chat.ChatActivity;
 import com.pz.supportchat.login_to_chat.LoginToChatActivity;
 import dagger.Module;
 import dagger.Provides;
@@ -10,7 +9,6 @@ import javax.inject.Singleton;
 
 @Module(
         injects = {
-                CurrentChatActivity.class,
                 ChatActivity.class,
                 LoginToChatActivity.class
         },

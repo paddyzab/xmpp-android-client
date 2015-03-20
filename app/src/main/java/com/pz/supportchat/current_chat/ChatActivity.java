@@ -1,4 +1,4 @@
-package com.pz.supportchat.chats_list;
+package com.pz.supportchat.current_chat;
 
 import com.google.common.collect.Lists;
 
@@ -74,7 +74,7 @@ public class ChatActivity extends InjectableActivity implements ChatMessageListe
 
     @Override
     public int getLayoutResource() {
-        return R.layout.activity_chat_list;
+        return R.layout.current_chat;
     }
 
     @Override
