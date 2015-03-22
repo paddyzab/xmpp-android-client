@@ -49,9 +49,9 @@ public class ChatService extends Service {
         String action = intent.getAction();
 
         if (action.equals(CHAT_SERVICE_ACTION_START)) {
-            mConnectionManager.connect(mConnection, mPostingConnectionChangeListener);
+            mConnectionManager.connect(mPostingConnectionChangeListener);
         } else if (action.equals(CHAT_SERVICE_ACTION_STOP)) {
-            mConnectionManager.disconnect(mConnection);
+            mConnectionManager.disconnect();
         }
 
         return START_NOT_STICKY;

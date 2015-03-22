@@ -1,28 +1,42 @@
 package com.pz.supportchat.xmpp;
 
+import com.google.common.base.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
-import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 public class ConnectionManager implements IChatManager {
 
-    @Override
-    public void connect(final XMPPTCPConnection connection,
-            final ConnectionListener connectionListener) {
+    @Inject
+    protected PostingMessageListener mPostingMessageListener;
 
-        connection.addConnectionListener(connectionListener);
+    private final XMPPTCPConnection mXMPPTCPConnection;
+    private final ChatManager mChatManager;
+    private Optional<Chat> mChatObservable = Optional.absent();
+
+    public ConnectionManager(final XMPPTCPConnection connection) {
+        mXMPPTCPConnection = connection;
+        mChatManager = ChatManager.getInstanceFor(mXMPPTCPConnection);
+    }
+
+    @Override
+    public void connect(final ConnectionListener connectionListener) {
+
+        mXMPPTCPConnection.addConnectionListener(connectionListener);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    connection.connect();
+                    mXMPPTCPConnection.connect();
                 } catch (SmackException | XMPPException | IOException e) {
                     e.printStackTrace();
                 }
@@ -31,29 +45,33 @@ public class ConnectionManager implements IChatManager {
     }
 
     @Override
-    public void login(final XMPPTCPConnection connection, final String user,
+    public void login(final String user,
             final String password) {
         try {
-            connection.login(user, password);
+            mXMPPTCPConnection.login(user, password);
         } catch (XMPPException | SmackException | IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void disconnect(final XMPPTCPConnection connection) {
-        connection.disconnect();
+    public void disconnect() {
+        mXMPPTCPConnection.disconnect();
     }
 
     @Override
-    public void sendMessage(final XMPPTCPConnection connection,
-            final String message, final String currentUser, ChatMessageListener messageListener) {
+    public void sendMessage(final String message, final String currentUser) {
 
-        final ChatManager chatManager = ChatManager.getInstanceFor(connection);
-        final Chat chat = chatManager.createChat(getUserJID(resolveUser(currentUser), connection), messageListener);
+        if (!mChatObservable.isPresent()) {
+            Chat chat = mChatManager
+                    .createChat(getUserJID(resolveUser(currentUser), mXMPPTCPConnection),
+                            mPostingMessageListener);
+            chat.addMessageListener(mPostingMessageListener);
+            mChatObservable = Optional.fromNullable(chat);
+        }
 
         try {
-            chat.sendMessage(message);
+            mChatObservable.get().sendMessage(message);
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }

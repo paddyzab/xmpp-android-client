@@ -67,7 +67,7 @@ public class LoginToChatActivity extends InjectableActivity {
     @OnClick(R.id.layoutConnectionStatus)
     protected void reconnect() {
         if (!mConnection.isConnected()) {
-            mConnectionManager.connect(mConnection, mPostingConnectionChangeListener);
+            mConnectionManager.connect(mPostingConnectionChangeListener);
         }
     }
 
@@ -133,7 +133,7 @@ public class LoginToChatActivity extends InjectableActivity {
     }
 
     private void loginAndStartChat() {
-        mConnectionManager.login(mConnection, editTextPickNickname.getText().toString(),
+        mConnectionManager.login(editTextPickNickname.getText().toString(),
                 editTextPassword.getText().toString());
 
         if (mConnection.isAuthenticated()) {
