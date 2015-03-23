@@ -2,6 +2,9 @@ package com.pz.supportchat.xmpp;
 
 import com.google.common.base.Optional;
 
+import com.pz.supportchat.App;
+import com.pz.supportchat.PostingMessageListener;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
@@ -9,6 +12,8 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+
+import android.content.Context;
 
 import java.io.IOException;
 

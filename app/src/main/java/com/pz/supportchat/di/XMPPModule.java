@@ -1,8 +1,8 @@
 package com.pz.supportchat.di;
 
-import com.pz.supportchat.xmpp.ConnectionManager;
+import com.pz.supportchat.PostingMessageListener;
 import com.pz.supportchat.xmpp.ChatService;
-import com.pz.supportchat.xmpp.PostingMessageListener;
+import com.pz.supportchat.xmpp.ConnectionManager;
 import com.pz.supportchat.xmpp.RosterManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 
@@ -40,11 +40,5 @@ final class XMPPModule {
     @Singleton
     RosterManager provideRosterManager() {
         return new RosterManager();
-    }
-
-    @Provides
-    @Singleton
-    PostingMessageListener providePostingMessageListener() {
-        return new PostingMessageListener();
     }
 }

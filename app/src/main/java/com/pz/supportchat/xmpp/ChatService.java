@@ -3,8 +3,6 @@ package com.pz.supportchat.xmpp;
 import com.pz.supportchat.App;
 import com.pz.supportchat.PostingConnectionChangeListener;
 
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -29,8 +27,6 @@ public class ChatService extends Service {
     @Inject
     protected PostingConnectionChangeListener mPostingConnectionChangeListener;
     
-    private XMPPTCPConnection mConnection;
-
     @Override
     public IBinder onBind(Intent intent) {
         throw new UnsupportedOperationException("Not yet implemented");
@@ -40,8 +36,6 @@ public class ChatService extends Service {
     public void onCreate() {
         super.onCreate();
         App.get(this).inject(this);
-
-        mConnection = mXMPPConnectionProvider.getConnection();
     }
 
     @Override
