@@ -2,7 +2,6 @@ package com.pz.supportchat.xmpp;
 
 import com.google.common.base.Optional;
 
-import com.pz.supportchat.App;
 import com.pz.supportchat.PostingMessageListener;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,26 +10,33 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-
-import android.content.Context;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
 public class ConnectionManager implements IChatManager {
-
-    @Inject
-    protected PostingMessageListener mPostingMessageListener;
 
     private final XMPPTCPConnection mXMPPTCPConnection;
     private final ChatManager mChatManager;
     private Optional<Chat> mChatObservable = Optional.absent();
+    private final PostingMessageListener mPostingMessageListener;
 
-    public ConnectionManager(final XMPPTCPConnection connection) {
+    public ConnectionManager(final XMPPTCPConnection connection,
+            final PostingMessageListener postingMessageListener) {
         mXMPPTCPConnection = connection;
+        mPostingMessageListener = postingMessageListener;
         mChatManager = ChatManager.getInstanceFor(mXMPPTCPConnection);
+
+        mChatManager.addChatListener(new ChatManagerListener() {
+            @Override
+            public void chatCreated(Chat chat, boolean createdLocally) {
+                if (!createdLocally) {
+                    chat.addMessageListener(postingMessageListener);
+                    mChatObservable = Optional.of(chat);
+                }
+            }
+        });
     }
 
     @Override

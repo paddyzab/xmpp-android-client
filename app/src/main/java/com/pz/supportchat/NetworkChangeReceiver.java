@@ -1,7 +1,5 @@
 package com.pz.supportchat;
 
-import com.squareup.otto.Bus;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +14,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     }
 
     @Inject
-    protected Bus bus;
+    protected MainThreadBus bus;
 
     @Override
     public void onReceive(final Context context, final Intent intent) {

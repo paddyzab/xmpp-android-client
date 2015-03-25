@@ -19,9 +19,6 @@ public class ChatService extends Service {
             = "STOP";
 
     @Inject
-    protected XMPPConnectionProvider mXMPPConnectionProvider;
-
-    @Inject
     protected ConnectionManager mConnectionManager;
 
     @Inject

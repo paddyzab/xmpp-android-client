@@ -1,8 +1,6 @@
 package com.pz.supportchat;
 
 
-import com.squareup.otto.Bus;
-
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPConnection;
 
@@ -19,7 +17,7 @@ public class PostingConnectionChangeListener implements ConnectionListener {
     public final static String DISCONNECTED = "disconnected";
     
     @Inject
-    protected Bus mBus;
+    protected MainThreadBus mBus;
 
     public static class XMPPConnectionStatus {
         public final String mStatus;

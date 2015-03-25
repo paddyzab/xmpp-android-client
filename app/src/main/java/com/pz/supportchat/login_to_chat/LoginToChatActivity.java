@@ -2,12 +2,12 @@ package com.pz.supportchat.login_to_chat;
 
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
+import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.PostingConnectionChangeListener;
 import com.pz.supportchat.R;
 import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
 import com.pz.supportchat.xmpp.ConnectionManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.StringUtils;
@@ -44,7 +44,7 @@ public class LoginToChatActivity extends InjectableActivity {
     protected ConnectionManager mConnectionManager;
 
     @Inject
-    protected Bus mBus;
+    protected MainThreadBus mBus;
 
     @Inject
     protected PostingConnectionChangeListener mPostingConnectionChangeListener;

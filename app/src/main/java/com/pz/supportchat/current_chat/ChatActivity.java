@@ -4,11 +4,11 @@ import com.google.common.collect.Lists;
 
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
+import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.R;
 import com.pz.supportchat.bus_events.NewMessageEvent;
 import com.pz.supportchat.commons.models.InternalMessage;
 import com.pz.supportchat.xmpp.ConnectionManager;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +28,7 @@ public class ChatActivity extends InjectableActivity {
     private final static String EMPTY_STRING = "";
 
     @Inject
-    protected Bus mBus;
+    protected MainThreadBus mBus;
 
     @Inject
     protected ConnectionManager mConnectionManager;

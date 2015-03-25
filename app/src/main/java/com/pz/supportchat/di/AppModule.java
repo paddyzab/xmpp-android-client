@@ -4,7 +4,6 @@ import com.pz.supportchat.App;
 import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.NetworkChangeReceiver;
 import com.pz.supportchat.PostingConnectionChangeListener;
-import com.squareup.otto.Bus;
 
 import android.app.Application;
 
@@ -20,7 +19,8 @@ import dagger.Provides;
         },injects = {
         App.class,
         NetworkChangeReceiver.class,
-        PostingConnectionChangeListener.class
+        PostingConnectionChangeListener.class,
+        MainThreadBus.class
 })
 final class AppModule {
     private final App app;
@@ -37,7 +37,7 @@ final class AppModule {
 
     @Provides 
     @Singleton
-    Bus provideBus() {
+    MainThreadBus provideBus() {
         return new MainThreadBus();
     }
 }
