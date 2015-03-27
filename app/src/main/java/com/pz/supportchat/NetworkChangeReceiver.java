@@ -5,24 +5,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 
-import javax.inject.Inject;
-
 public class NetworkChangeReceiver extends BroadcastReceiver {
+
     public enum InternetConnectionStatus {
         CONNECTED,
         DISCONNECTED
     }
 
-    @Inject
-    protected MainThreadBus bus;
+
+    private final MainThreadBus mBus;
+
+    public NetworkChangeReceiver(final MainThreadBus bus) {
+        this.mBus = bus;
+    }
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        final ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final ConnectivityManager connMgr = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         final android.net.NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        final android.net.NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        final android.net.NetworkInfo mobile = connMgr
+                .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-        bus.post(wifi.isAvailable() || mobile.isAvailable()
+        mBus.post(wifi.isAvailable() || mobile.isAvailable()
                 ? InternetConnectionStatus.CONNECTED
                 : InternetConnectionStatus.DISCONNECTED);
     }
