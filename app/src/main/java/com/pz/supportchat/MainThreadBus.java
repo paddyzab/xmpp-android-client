@@ -2,10 +2,12 @@ package com.pz.supportchat;
 
 import com.squareup.otto.Bus;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
 public class MainThreadBus extends Bus {
+
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
@@ -20,5 +22,9 @@ public class MainThreadBus extends Bus {
                 }
             });
         }
+    }
+
+    public void inject(Context context) {
+        App.get(context).inject(this);
     }
 }

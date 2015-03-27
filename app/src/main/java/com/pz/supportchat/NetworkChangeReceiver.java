@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 
+import javax.inject.Inject;
+
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
     public enum InternetConnectionStatus {
@@ -12,12 +14,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         DISCONNECTED
     }
 
-
-    private final MainThreadBus mBus;
-
-    public NetworkChangeReceiver(final MainThreadBus bus) {
-        this.mBus = bus;
-    }
+    @Inject
+    public MainThreadBus mBus;
 
     @Override
     public void onReceive(final Context context, final Intent intent) {

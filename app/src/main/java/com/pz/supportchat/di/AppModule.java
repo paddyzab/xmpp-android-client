@@ -40,11 +40,4 @@ final class AppModule {
     MainThreadBus provideBus() {
         return new MainThreadBus();
     }
-    
-    @Provides
-    @Singleton
-    NetworkChangeReceiver provideNetworkChangeReceiver(MainThreadBus bus) {
-        return new NetworkChangeReceiver(bus);
-        
-    }
 }

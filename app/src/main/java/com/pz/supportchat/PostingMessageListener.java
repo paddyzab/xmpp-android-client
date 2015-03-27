@@ -7,8 +7,6 @@ import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
 
-import android.util.Log;
-
 import javax.inject.Inject;
 
 public class PostingMessageListener implements ChatMessageListener {
