@@ -11,15 +11,11 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
-import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.roster.Roster;
-import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
-import android.util.Log;
-
 import java.io.IOException;
-import java.util.Collection;
+
+import javax.inject.Inject;
 
 public class ConnectionManager implements IChatManager {
 
@@ -28,6 +24,9 @@ public class ConnectionManager implements IChatManager {
     private Optional<Chat> mChatObservable = Optional.absent();
     private final PostingMessageListener mPostingMessageListener;
 
+    @Inject
+    protected RosterManager mRosterManager;
+    
     public ConnectionManager(final XMPPTCPConnection connection,
             final PostingMessageListener postingMessageListener) {
         mXMPPTCPConnection = connection;
@@ -41,32 +40,6 @@ public class ConnectionManager implements IChatManager {
                     chat.addMessageListener(postingMessageListener);
                     mChatObservable = Optional.of(chat);
                 }
-            }
-        });
-
-        final Roster roster = Roster.getInstanceFor(connection);
-        roster.addRosterListener(new RosterListener() {
-            @Override
-            public void entriesAdded(Collection<String> addresses) {
-
-            }
-
-            @Override
-            public void entriesUpdated(Collection<String> addresses) {
-
-            }
-
-            @Override
-            public void entriesDeleted(Collection<String> addresses) {
-
-            }
-
-            @Override
-            public void presenceChanged(Presence presence) {
-                Log.d(ConnectionManager.class.getSimpleName(), " new presence from: " + presence.getFrom());
-                final Presence bestPresence = roster.getPresence(presence.getFrom());
-                bestPresence.isAvailable();
-                bestPresence.getStatus();
             }
         });
     }

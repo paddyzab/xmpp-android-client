@@ -1,10 +1,12 @@
 package com.pz.supportchat.xmpp;
 
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterGroup;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jivesoftware.smackx.muc.MultiUserChatManager;
 
 import android.util.Log;
 
@@ -26,16 +28,23 @@ public class RosterManager {
             Log.d("SMACK", "group: " + group.getName() + " " + group.getEntries());
         }
 
-        MultiUserChatManager multiUserChatManager = MultiUserChatManager.getInstanceFor(connection);
-        
-        
         return entries;
     }
-    
-    public RosterEntry getRosterEntryForUser(final String user, final XMPPTCPConnection connection) {
+
+    public RosterEntry getRosterEntryForUser(final String user,
+            final XMPPTCPConnection connection) {
         final Roster roster = Roster.getInstanceFor(connection);
         return roster.getEntry(user);
     }
-    
-    
+
+    public boolean createRosterEntry(final String user, final XMPPConnection connection) {
+        final Roster roster = Roster.getInstanceFor(connection);
+        try {
+            roster.createEntry(user, user, null);
+            return true;
+        } catch (SmackException.NotLoggedInException | SmackException.NoResponseException | XMPPException.XMPPErrorException | SmackException.NotConnectedException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

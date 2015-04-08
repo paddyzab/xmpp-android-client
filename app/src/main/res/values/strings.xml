@@ -4,4 +4,6 @@
     <string name="current_chat">Current chat</string>
     <string name="chat_list">List of chats</string>
     <string name="login_to_chat">Home chat</string>
+    
+    <string name="add_contact">Add contact</string>
 </resources>
