@@ -1,6 +1,5 @@
 package com.pz.supportchat.xmpp;
 
-import android.util.Log;
 import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.bus_events.EntriesUpdated;
 import com.pz.supportchat.bus_events.NewEntriesAdded;
@@ -33,7 +32,6 @@ public class PostingRosterListener implements RosterListener {
 
     @Override
     public void presenceChanged(Presence presence) {
-        Log.d("PRESENCE_DEBUG", "posting change on the bus: " + presence.getMode() + presence.getStatus());
         mBus.post(new PresenceChangedEvent(presence));
     }
 }

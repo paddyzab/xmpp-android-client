@@ -1,7 +1,6 @@
 package com.pz.supportchat.contacts_list;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 import butterknife.InjectView;
@@ -33,13 +32,12 @@ public class ContactsActivity extends InjectableActivity {
     @Inject
     protected MainThreadBus mBus;
 
+    private ContactsAdapter contactsAdapter;
+
     @Override
     public int getLayoutResource() {
         return R.layout.contacts_list;
     }
-
-    // TODO: We need roster change listener too here, create it out it behind the bus.
-    // and update the list on change
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +45,7 @@ public class ContactsActivity extends InjectableActivity {
 
         final List<RosterEntry> rosterEntries = Lists.newArrayList(mRosterManager
                 .getRosterEntries(mXMPPConnectionProvider.getConnection()));
-        final ContactsAdapter contactsAdapter = new ContactsAdapter(ContactsActivity.this, rosterEntries);
+        contactsAdapter = new ContactsAdapter(ContactsActivity.this, rosterEntries);
         contactsListView.setAdapter(contactsAdapter);
 
         mBus.register(this);
@@ -63,7 +61,8 @@ public class ContactsActivity extends InjectableActivity {
     public void onPresenceChanged(final PresenceChangedEvent event) {
         final Presence presence = event.presence;
 
-        Log.d("PRESENCE_DEBUG", "changed presence: " + presence.getMode() + " status: " +  presence.getStatus());
+        Toast.makeText(ContactsActivity.this, presence.getFrom() + ", is " + presence.getType(), Toast.LENGTH_LONG).show();
+        contactsAdapter.notifyDataSetInvalidated();
     }
 
     @OnClick(R.id.buttonAddContact)

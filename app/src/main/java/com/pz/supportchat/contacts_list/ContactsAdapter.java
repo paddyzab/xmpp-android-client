@@ -1,6 +1,7 @@
 package com.pz.supportchat.contacts_list;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,10 @@ public class ContactsAdapter extends BaseAdapter {
         final TextView textViewUserName = (TextView) view.findViewById(R.id.textViewUserName);
         final ImageView imageViewStatus = (ImageView) view.findViewById(R.id.imageViewStatus);
         textViewUserName.setText(mRosterEntries.get(position).getName());
+
+        // TODO since RosterEntry does not carry information about the presence, we will need to change it from outside.
+        // Or extend the Roster to carry that data.
+        Log.d("SMACK", " roster entry: " + mRosterEntries.get(position).toString());
 
         return view;
     }
