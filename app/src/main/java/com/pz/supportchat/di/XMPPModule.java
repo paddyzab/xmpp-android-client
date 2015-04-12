@@ -3,6 +3,7 @@ package com.pz.supportchat.di;
 import com.pz.supportchat.PostingMessageListener;
 import com.pz.supportchat.xmpp.ChatService;
 import com.pz.supportchat.xmpp.ConnectionManager;
+import com.pz.supportchat.xmpp.PostingRosterListener;
 import com.pz.supportchat.xmpp.RosterManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 
@@ -17,7 +18,8 @@ import dagger.Provides;
                 ChatService.class,
                 ConnectionManager.class,
                 RosterManager.class,
-                PostingMessageListener.class
+                PostingMessageListener.class,
+                PostingRosterListener.class
         },
         complete = false,
         library = true
