@@ -37,7 +37,7 @@ public class RosterManager {
         return roster.getEntry(user);
     }
 
-    public boolean createRosterEntry(final String user, final XMPPConnection connection) {
+    public boolean addRosterEntry(final String user, final XMPPConnection connection) {
         final Roster roster = Roster.getInstanceFor(connection);
         try {
             roster.createEntry(user, user, null);

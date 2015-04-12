@@ -1,23 +1,24 @@
 package com.pz.supportchat.contacts_list;
 
-import com.pz.supportchat.R;
-
-import org.jivesoftware.smack.roster.RosterEntry;
-import org.jivesoftware.smack.roster.packet.RosterPacket;
-
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.pz.supportchat.R;
 import java.util.List;
+import org.jivesoftware.smack.roster.RosterEntry;
 
 public class ContactsAdapter extends BaseAdapter {
 
     private List<RosterEntry> mRosterEntries;
+    private final LayoutInflater mLayoutInflater;
 
-    public ContactsAdapter(final List<RosterEntry> rosterEntries) {
+    public ContactsAdapter(final Context context, final List<RosterEntry> rosterEntries) {
         mRosterEntries = rosterEntries;
+        mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -35,16 +36,17 @@ public class ContactsAdapter extends BaseAdapter {
         return position;
     }
 
+    // TODO create CustomView
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final View view = View.inflate(parent.getContext(), R.layout.contact_adapter, parent);
+        View view = convertView;
+
+        if (view == null) {
+            view = mLayoutInflater.inflate(R.layout.contact_adapter, parent, false);
+        }
         final TextView textViewUserName = (TextView) view.findViewById(R.id.textViewUserName);
-
-        textViewUserName.setText(
-                mRosterEntries.get(position).getName() + " user: " + mRosterEntries.get(position)
-                        .getUser());
-        RosterPacket.ItemStatus status = mRosterEntries.get(position).getStatus();
-
+        final ImageView imageViewStatus = (ImageView) view.findViewById(R.id.imageViewStatus);
+        textViewUserName.setText(mRosterEntries.get(position).getName());
 
         return view;
     }

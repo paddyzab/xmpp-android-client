@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    
-    <ListView android:id="@+id/contactsListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_above="@id/buttonAddContact"/>
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    
     <Button android:id="@+id/buttonAddContact"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_contact"
-        android:layout_alignParentBottom="true"/>
-    
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_contact"
+            android:layout_alignParentBottom="true"/>
+
+    <ListView android:id="@+id/contactsListView"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentTop="true"
+              android:layout_above="@id/buttonAddContact"/>
+
+    <TextView
+            android:id="@android:id/empty"
+            android:text="@string/no_contacts_empty_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/abc_secondary_text_material_light"
+            android:textSize="16sp"
+            android:layout_centerInParent="true"/>
+
 </RelativeLayout>

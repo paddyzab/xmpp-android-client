@@ -138,7 +138,7 @@ public class LoginToChatActivity extends InjectableActivity {
 
         if (mConnection.isAuthenticated()) {
             startActivity(
-                    intents.getCurrentChatIntent(this, editTextPickNickname.getText().toString()));
+                    intents.getContactsIntent(this));
         }
     }
 

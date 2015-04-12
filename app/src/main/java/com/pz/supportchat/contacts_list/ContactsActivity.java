@@ -1,26 +1,23 @@
 package com.pz.supportchat.contacts_list;
 
+import android.os.Bundle;
+import android.widget.ListView;
+import android.widget.Toast;
+import butterknife.InjectView;
+import butterknife.OnClick;
+import com.google.common.collect.Lists;
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.R;
 import com.pz.supportchat.xmpp.RosterManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
-
-import org.jivesoftware.smack.roster.RosterEntry;
-
-import android.os.Bundle;
-import android.widget.ListView;
-
-import java.util.Collection;
-
+import java.util.List;
 import javax.inject.Inject;
-
-import butterknife.InjectView;
-import butterknife.OnClick;
+import org.jivesoftware.smack.roster.RosterEntry;
 
 public class ContactsActivity extends InjectableActivity {
 
     @InjectView(R.id.contactsListView)
-    private ListView contactsListView;
+    public ListView contactsListView;
 
     @Inject
     protected RosterManager mRosterManager;
@@ -33,22 +30,26 @@ public class ContactsActivity extends InjectableActivity {
         return R.layout.contacts_list;
     }
 
+    // TODO: We need roster change listener too here, create it out it behind the bus.
+    // and update the list on change
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Collection<RosterEntry> rosterEntries = mRosterManager
-                .getRosterEntries(mXMPPConnectionProvider.getConnection());
-        
-        if (rosterEntries.isEmpty()) {
-            //TODO support empty collection case on the list view
-        } else {
-            //contactsListView.setAdapter();
-        }
+        final List<RosterEntry> rosterEntries = Lists.newArrayList(mRosterManager
+                .getRosterEntries(mXMPPConnectionProvider.getConnection()));
+        final ContactsAdapter contactsAdapter = new ContactsAdapter(ContactsActivity.this, rosterEntries);
+        contactsListView.setAdapter(contactsAdapter);
     }
 
     @OnClick(R.id.buttonAddContact)
     protected void addContact() {
-        mRosterManager.createRosterEntry("test_user", mXMPPConnectionProvider.getConnection());
+        if (mRosterManager.addRosterEntry("skarbek", mXMPPConnectionProvider.getConnection())) {
+            Toast.makeText(ContactsActivity.this, "Roster Entry created.", Toast.LENGTH_LONG).show();
+
+        } else {
+            Toast.makeText(ContactsActivity.this, "Unable to create roster. Try again later.", Toast.LENGTH_LONG).show();
+        }
     }
 }
