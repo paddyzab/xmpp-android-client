@@ -63,12 +63,12 @@ public class ContactsActivity extends InjectableActivity {
     public void onPresenceChanged(final PresenceChangedEvent event) {
         final Presence presence = event.presence;
 
-        Log.d("PRESENCE_DEBUG", "changed presence: " + presence.getMode() + presence.getStatus());
+        Log.d("PRESENCE_DEBUG", "changed presence: " + presence.getMode() + " status: " +  presence.getStatus());
     }
 
     @OnClick(R.id.buttonAddContact)
     protected void addContact() {
-        if (mRosterManager.addRosterEntry("skarbek", mXMPPConnectionProvider.getConnection())) {
+        if (mRosterManager.addRosterEntry("skarbek" + "@" + XMPPConnectionProvider.SERVER_HOST, mXMPPConnectionProvider.getConnection())) {
             Toast.makeText(ContactsActivity.this, "Roster Entry created.", Toast.LENGTH_LONG).show();
 
         } else {

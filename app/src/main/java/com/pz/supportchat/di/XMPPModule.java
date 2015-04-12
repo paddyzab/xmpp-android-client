@@ -40,7 +40,7 @@ final class XMPPModule {
 
     @Provides
     @Singleton
-    RosterManager provideRosterManager() {
-        return new RosterManager();
+    RosterManager provideRosterManager(final PostingRosterListener postingRosterListener) {
+        return new RosterManager(postingRosterListener);
     }
 }

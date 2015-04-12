@@ -1,9 +1,8 @@
 package com.pz.supportchat.xmpp;
 
 import com.google.common.base.Optional;
-
 import com.pz.supportchat.PostingMessageListener;
-
+import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
@@ -11,11 +10,9 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-
-import java.io.IOException;
-
-import javax.inject.Inject;
+import static org.jivesoftware.smack.packet.Presence.Type.available;
 
 public class ConnectionManager implements IChatManager {
 
@@ -23,9 +20,6 @@ public class ConnectionManager implements IChatManager {
     private final ChatManager mChatManager;
     private Optional<Chat> mChatObservable = Optional.absent();
     private final PostingMessageListener mPostingMessageListener;
-
-    @Inject
-    protected RosterManager mRosterManager;
     
     public ConnectionManager(final XMPPTCPConnection connection,
             final PostingMessageListener postingMessageListener) {
@@ -65,6 +59,7 @@ public class ConnectionManager implements IChatManager {
             final String password) {
         try {
             mXMPPTCPConnection.login(user, password);
+            mXMPPTCPConnection.sendPacket(new Presence(available));
         } catch (XMPPException | SmackException | IOException e) {
             e.printStackTrace();
         }
@@ -79,7 +74,7 @@ public class ConnectionManager implements IChatManager {
     public void sendMessage(final String message, final String currentUser) {
 
         if (!mChatObservable.isPresent()) {
-            Chat chat = mChatManager
+            final Chat chat = mChatManager
                     .createChat(getUserJID(resolveUser(currentUser), mXMPPTCPConnection),
                             mPostingMessageListener);
             chat.addMessageListener(mPostingMessageListener);

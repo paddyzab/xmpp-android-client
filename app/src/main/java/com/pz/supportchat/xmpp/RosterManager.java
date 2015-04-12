@@ -1,7 +1,6 @@
 package com.pz.supportchat.xmpp;
 
 import java.util.Collection;
-import javax.inject.Inject;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -11,8 +10,11 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 public class RosterManager {
 
-    @Inject
-    protected PostingRosterListener mPostingRosterListener;
+    private PostingRosterListener mPostingRosterListener;
+
+    public RosterManager(final PostingRosterListener postingRosterListener) {
+        mPostingRosterListener = postingRosterListener;
+    }
 
     public Collection<RosterEntry> getRosterEntries(final XMPPTCPConnection connection) {
         final Roster roster = Roster.getInstanceFor(connection);
