@@ -1,5 +1,10 @@
 package com.pz.supportchat.contacts_list;
 
+import com.pz.supportchat.R;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jivesoftware.smack.roster.RosterEntry;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,9 +13,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.pz.supportchat.R;
+
 import java.util.List;
-import org.jivesoftware.smack.roster.RosterEntry;
 
 public class ContactsAdapter extends BaseAdapter {
 
@@ -19,7 +23,8 @@ public class ContactsAdapter extends BaseAdapter {
 
     public ContactsAdapter(final Context context, final List<RosterEntry> rosterEntries) {
         mRosterEntries = rosterEntries;
-        mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mLayoutInflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -28,7 +33,7 @@ public class ContactsAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public RosterEntry getItem(int position) {
         return mRosterEntries.get(position);
     }
 
@@ -54,5 +59,16 @@ public class ContactsAdapter extends BaseAdapter {
         Log.d("SMACK", " roster entry: " + mRosterEntries.get(position).toString());
 
         return view;
+    }
+
+    public void switchContactAvailability(final String user) {
+        for (final RosterEntry rosterEntry : mRosterEntries) {
+            if (StringUtils.equals(rosterEntry.getUser(), user)) {
+                
+            } else {
+                throw new IllegalStateException("User should be in the roster entry");
+            }
+        }
+
     }
 }

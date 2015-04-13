@@ -6,6 +6,7 @@ import android.widget.Toast;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.google.common.collect.Lists;
+
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.R;
@@ -13,10 +14,13 @@ import com.pz.supportchat.bus_events.PresenceChangedEvent;
 import com.pz.supportchat.xmpp.RosterManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 import com.squareup.otto.Subscribe;
-import java.util.List;
-import javax.inject.Inject;
+
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.RosterEntry;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 public class ContactsActivity extends InjectableActivity {
 
@@ -61,7 +65,7 @@ public class ContactsActivity extends InjectableActivity {
     public void onPresenceChanged(final PresenceChangedEvent event) {
         final Presence presence = event.presence;
 
-        Toast.makeText(ContactsActivity.this, presence.getFrom() + ", is " + presence.getType(), Toast.LENGTH_LONG).show();
+        contactsAdapter.switchContactAvailability(presence.getFrom());
         contactsAdapter.notifyDataSetInvalidated();
     }
 
