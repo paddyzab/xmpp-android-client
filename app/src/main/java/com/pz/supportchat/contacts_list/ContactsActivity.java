@@ -6,21 +6,18 @@ import android.widget.Toast;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.google.common.collect.Lists;
-
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.R;
 import com.pz.supportchat.bus_events.PresenceChangedEvent;
+import com.pz.supportchat.commons.models.PresenceAwareRosterEntry;
+import com.pz.supportchat.utils.StringUtils;
 import com.pz.supportchat.xmpp.RosterManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 import com.squareup.otto.Subscribe;
-
-import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.roster.RosterEntry;
-
 import java.util.List;
-
 import javax.inject.Inject;
+import org.jivesoftware.smack.packet.Presence;
 
 public class ContactsActivity extends InjectableActivity {
 
@@ -47,7 +44,7 @@ public class ContactsActivity extends InjectableActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final List<RosterEntry> rosterEntries = Lists.newArrayList(mRosterManager
+        final List<PresenceAwareRosterEntry> rosterEntries = Lists.newArrayList(mRosterManager
                 .getRosterEntries(mXMPPConnectionProvider.getConnection()));
         contactsAdapter = new ContactsAdapter(ContactsActivity.this, rosterEntries);
         contactsListView.setAdapter(contactsAdapter);
@@ -65,7 +62,7 @@ public class ContactsActivity extends InjectableActivity {
     public void onPresenceChanged(final PresenceChangedEvent event) {
         final Presence presence = event.presence;
 
-        contactsAdapter.switchContactAvailability(presence.getFrom());
+        contactsAdapter.switchContactAvailability(StringUtils.parseBareAddress(presence.getFrom()));
         contactsAdapter.notifyDataSetInvalidated();
     }
 

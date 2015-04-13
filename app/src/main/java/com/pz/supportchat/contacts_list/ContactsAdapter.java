@@ -1,10 +1,5 @@
 package com.pz.supportchat.contacts_list;
 
-import com.pz.supportchat.R;
-
-import org.apache.commons.lang3.StringUtils;
-import org.jivesoftware.smack.roster.RosterEntry;
-
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,15 +8,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.pz.supportchat.R;
+import com.pz.supportchat.commons.models.PresenceAwareRosterEntry;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 public class ContactsAdapter extends BaseAdapter {
 
-    private List<RosterEntry> mRosterEntries;
+    private List<PresenceAwareRosterEntry> mRosterEntries;
     private final LayoutInflater mLayoutInflater;
 
-    public ContactsAdapter(final Context context, final List<RosterEntry> rosterEntries) {
+    public ContactsAdapter(final Context context, final List<PresenceAwareRosterEntry> rosterEntries) {
         mRosterEntries = rosterEntries;
         mLayoutInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -33,7 +30,7 @@ public class ContactsAdapter extends BaseAdapter {
     }
 
     @Override
-    public RosterEntry getItem(int position) {
+    public PresenceAwareRosterEntry getItem(int position) {
         return mRosterEntries.get(position);
     }
 
@@ -52,7 +49,9 @@ public class ContactsAdapter extends BaseAdapter {
         }
         final TextView textViewUserName = (TextView) view.findViewById(R.id.textViewUserName);
         final ImageView imageViewStatus = (ImageView) view.findViewById(R.id.imageViewStatus);
+
         textViewUserName.setText(mRosterEntries.get(position).getName());
+        imageViewStatus.setBackgroundColor(resolvePresence(mRosterEntries.get(position).isPresent(), parent.getContext()));
 
         // TODO since RosterEntry does not carry information about the presence, we will need to change it from outside.
         // Or extend the Roster to carry that data.
@@ -61,10 +60,22 @@ public class ContactsAdapter extends BaseAdapter {
         return view;
     }
 
+    private int resolvePresence(final boolean isPresent, final Context context) {
+        if (isPresent) {
+            return context.getResources().getColor(R.color.green);
+        } else {
+            return context.getResources().getColor(R.color.red);
+        }
+    }
+
     public void switchContactAvailability(final String user) {
-        for (final RosterEntry rosterEntry : mRosterEntries) {
+
+        Log.d(ContactsAdapter.class.getSimpleName(), "user name: " + user);
+        Log.d(ContactsAdapter.class.getSimpleName(), "roster entries: " + mRosterEntries);
+
+        for (final PresenceAwareRosterEntry rosterEntry : mRosterEntries) {
             if (StringUtils.equals(rosterEntry.getUser(), user)) {
-                
+                mRosterEntries.get(mRosterEntries.indexOf(rosterEntry)).presenceChanged();
             } else {
                 throw new IllegalStateException("User should be in the roster entry");
             }

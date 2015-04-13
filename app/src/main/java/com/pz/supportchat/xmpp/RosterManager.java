@@ -1,6 +1,9 @@
 package com.pz.supportchat.xmpp;
 
+import com.google.common.collect.Lists;
+import com.pz.supportchat.commons.models.PresenceAwareRosterEntry;
 import java.util.Collection;
+import java.util.List;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -16,10 +19,16 @@ public class RosterManager {
         mPostingRosterListener = postingRosterListener;
     }
 
-    public Collection<RosterEntry> getRosterEntries(final XMPPTCPConnection connection) {
+    public Collection<PresenceAwareRosterEntry> getRosterEntries(final XMPPTCPConnection connection) {
         final Roster roster = Roster.getInstanceFor(connection);
+        final List<PresenceAwareRosterEntry> presenceAwareRosterEntries = Lists.newArrayList();
         roster.addRosterListener(mPostingRosterListener);
-        return roster.getEntries();
+
+        for (RosterEntry rosterEntry : roster.getEntries()) {
+            presenceAwareRosterEntries.add(new PresenceAwareRosterEntry(rosterEntry));
+        }
+
+        return presenceAwareRosterEntries;
     }
 
     public boolean addRosterEntry(final String user, final XMPPConnection connection) {
