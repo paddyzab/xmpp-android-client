@@ -1,7 +1,6 @@
 package com.pz.supportchat.contacts_list;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,10 +52,6 @@ public class ContactsAdapter extends BaseAdapter {
         textViewUserName.setText(mRosterEntries.get(position).getName());
         imageViewStatus.setBackgroundColor(resolvePresence(mRosterEntries.get(position).isPresent(), parent.getContext()));
 
-        // TODO since RosterEntry does not carry information about the presence, we will need to change it from outside.
-        // Or extend the Roster to carry that data.
-        Log.d("SMACK", " roster entry: " + mRosterEntries.get(position).toString());
-
         return view;
     }
 
@@ -68,14 +63,11 @@ public class ContactsAdapter extends BaseAdapter {
         }
     }
 
-    public void switchContactAvailability(final String user) {
-
-        Log.d(ContactsAdapter.class.getSimpleName(), "user name: " + user);
-        Log.d(ContactsAdapter.class.getSimpleName(), "roster entries: " + mRosterEntries);
+    public void switchContactAvailability(final String user, boolean available) {
 
         for (final PresenceAwareRosterEntry rosterEntry : mRosterEntries) {
             if (StringUtils.equals(rosterEntry.getUser(), user)) {
-                mRosterEntries.get(mRosterEntries.indexOf(rosterEntry)).presenceChanged();
+                mRosterEntries.get(mRosterEntries.indexOf(rosterEntry)).setPresence(available);
             } else {
                 throw new IllegalStateException("User should be in the roster entry");
             }

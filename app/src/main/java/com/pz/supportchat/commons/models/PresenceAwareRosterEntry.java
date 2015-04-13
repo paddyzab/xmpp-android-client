@@ -20,8 +20,8 @@ public class PresenceAwareRosterEntry {
         return mRosterEntry.getUser();
     }
 
-    public void presenceChanged() {
-        isPresent = !isPresent;
+    public void setPresence(boolean isPresent) {
+        this.isPresent = isPresent;
     }
 
     public boolean isPresent() {

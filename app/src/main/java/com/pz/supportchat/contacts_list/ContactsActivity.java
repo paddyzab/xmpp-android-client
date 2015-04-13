@@ -62,10 +62,11 @@ public class ContactsActivity extends InjectableActivity {
     public void onPresenceChanged(final PresenceChangedEvent event) {
         final Presence presence = event.presence;
 
-        contactsAdapter.switchContactAvailability(StringUtils.parseBareAddress(presence.getFrom()));
+        contactsAdapter.switchContactAvailability(StringUtils.parseBareAddress(presence.getFrom()), presence.isAvailable());
         contactsAdapter.notifyDataSetInvalidated();
     }
 
+    // TODO add some basic dialog to set user data
     @OnClick(R.id.buttonAddContact)
     protected void addContact() {
         if (mRosterManager.addRosterEntry("skarbek" + "@" + XMPPConnectionProvider.SERVER_HOST, mXMPPConnectionProvider.getConnection())) {
