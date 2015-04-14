@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">SupportChat</string>
     
     <string name="current_chat">Current chat</string>
@@ -8,4 +8,9 @@
     
     <string name="add_contact">Add contact</string>
     <string name="no_contacts_empty_list">No contacts added</string>
+
+    <string name="username_hint">type username</string>
+    <string name="add_user_instructions">Add already registered user name to receive updates from that user.</string>
+    <string name="add_user">ADD</string>
+    <string name="cancel" tools:ignore="ButtonCase">CANCEL</string>
 </resources>

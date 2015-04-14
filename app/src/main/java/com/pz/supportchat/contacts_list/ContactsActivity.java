@@ -1,5 +1,7 @@
 package com.pz.supportchat.contacts_list;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -41,6 +43,8 @@ public class ContactsActivity extends InjectableActivity {
 
     private ContactsAdapter contactsAdapter;
 
+    public static final int DIALOG_FRAGMENT = 1;
+
     @Override
     public int getLayoutResource() {
         return R.layout.contacts_list;
@@ -79,9 +83,24 @@ public class ContactsActivity extends InjectableActivity {
         contactsAdapter.notifyDataSetInvalidated();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case DIALOG_FRAGMENT:
+
+                if (resultCode == Activity.RESULT_OK) {
+                    // After Ok code.
+                }
+
+                break;
+        }
+    }
+
     // TODO add some basic dialog to set user data
     @OnClick(R.id.buttonAddContact)
     protected void addContact() {
+
+
         if (mRosterManager.addRosterEntry("skarbek" + "@" + XMPPConnectionProvider.SERVER_HOST, mXMPPConnectionProvider.getConnection())) {
             Toast.makeText(ContactsActivity.this, "Roster Entry created.", Toast.LENGTH_LONG).show();
 
