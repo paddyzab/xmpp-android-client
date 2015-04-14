@@ -1,12 +1,15 @@
 package com.pz.supportchat.contacts_list;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.google.common.collect.Lists;
 import com.pz.supportchat.InjectableActivity;
+import com.pz.supportchat.Intents;
 import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.R;
 import com.pz.supportchat.bus_events.PresenceChangedEvent;
@@ -33,6 +36,9 @@ public class ContactsActivity extends InjectableActivity {
     @Inject
     protected MainThreadBus mBus;
 
+    @Inject
+    protected Intents mIntents;
+
     private ContactsAdapter contactsAdapter;
 
     @Override
@@ -48,6 +54,13 @@ public class ContactsActivity extends InjectableActivity {
                 .getRosterEntries(mXMPPConnectionProvider.getConnection()));
         contactsAdapter = new ContactsAdapter(ContactsActivity.this, rosterEntries);
         contactsListView.setAdapter(contactsAdapter);
+
+        contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(mIntents.getCurrentChatIntent(ContactsActivity.this, contactsAdapter.getItem(position).getName()));
+            }
+        });
 
         mBus.register(this);
     }
