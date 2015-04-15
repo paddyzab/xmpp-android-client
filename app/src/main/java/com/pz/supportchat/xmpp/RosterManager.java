@@ -35,11 +35,15 @@ public class RosterManager {
         final Roster roster = Roster.getInstanceFor(connection);
         roster.addRosterListener(mPostingRosterListener);
         try {
-            roster.createEntry(user, user, null);
+            roster.createEntry(createJID(user), user, null);
             return true;
         } catch (SmackException.NotLoggedInException | SmackException.NoResponseException | XMPPException.XMPPErrorException | SmackException.NotConnectedException e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private String createJID(final String user) {
+        return user + "@" + XMPPConnectionProvider.SERVER_HOST;
     }
 }

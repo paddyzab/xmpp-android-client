@@ -1,12 +1,11 @@
 package com.pz.supportchat.contacts_list;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.google.common.collect.Lists;
@@ -24,7 +23,7 @@ import java.util.List;
 import javax.inject.Inject;
 import org.jivesoftware.smack.packet.Presence;
 
-public class ContactsActivity extends InjectableActivity {
+public class ContactsActivity extends InjectableActivity implements AddContactDialogListener {
 
     @InjectView(R.id.contactsListView)
     public ListView contactsListView;
@@ -44,6 +43,7 @@ public class ContactsActivity extends InjectableActivity {
     private ContactsAdapter contactsAdapter;
 
     public static final int DIALOG_FRAGMENT = 1;
+    public static final String DIALOG_FRAGMENT_TAG = "_dialog_fragment_add_user";
 
     @Override
     public int getLayoutResource() {
@@ -84,28 +84,21 @@ public class ContactsActivity extends InjectableActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case DIALOG_FRAGMENT:
-
-                if (resultCode == Activity.RESULT_OK) {
-                    // After Ok code.
-                }
-
-                break;
-        }
+    public void onFinishEditDialog(final String user) {
+        mRosterManager.addRosterEntry(user, mXMPPConnectionProvider.getConnection());
+        contactsAdapter.notifyDataSetInvalidated();
     }
 
-    // TODO add some basic dialog to set user data
     @OnClick(R.id.buttonAddContact)
     protected void addContact() {
-
-
-        if (mRosterManager.addRosterEntry("skarbek" + "@" + XMPPConnectionProvider.SERVER_HOST, mXMPPConnectionProvider.getConnection())) {
-            Toast.makeText(ContactsActivity.this, "Roster Entry created.", Toast.LENGTH_LONG).show();
-
-        } else {
-            Toast.makeText(ContactsActivity.this, "Unable to create roster. Try again later.", Toast.LENGTH_LONG).show();
+        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        final Fragment previousFragment = getFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG);
+        if (previousFragment != null) {
+            fragmentTransaction.remove(previousFragment);
         }
+        fragmentTransaction.addToBackStack(null);
+
+        final AddUserDialog addContactDialog = AddUserDialog.newInstance();
+        addContactDialog.show(fragmentTransaction, DIALOG_FRAGMENT_TAG);
     }
 }

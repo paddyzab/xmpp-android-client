@@ -1,6 +1,5 @@
 package com.pz.supportchat.contacts_list;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -13,7 +12,17 @@ import com.pz.supportchat.R;
 
 public class AddUserDialog extends DialogFragment {
 
-    public final static String USERNAME_KEY = "_username";
+    private AddContactDialogListener addContactDialogListener;
+
+    public static AddUserDialog newInstance() {
+        return new AddUserDialog();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        addContactDialogListener = (AddContactDialogListener) getActivity();
+    }
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
@@ -25,11 +34,10 @@ public class AddUserDialog extends DialogFragment {
         final EditText editTextUserName = (EditText) fragmentView.findViewById(R.id.editTextUserName);
 
         builder.setView(fragmentView)
-                // Add action buttons
                 .setPositiveButton(R.string.add_user, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(USERNAME_KEY, editTextUserName.getText()));
+                        addContactDialogListener.onFinishEditDialog(editTextUserName.getText().toString());
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
