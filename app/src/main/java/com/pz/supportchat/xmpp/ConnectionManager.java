@@ -3,7 +3,6 @@ package com.pz.supportchat.xmpp;
 import com.google.common.base.Optional;
 import com.pz.supportchat.PostingMessageListener;
 import java.io.IOException;
-import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -20,9 +19,9 @@ public class ConnectionManager implements IChatManager {
     private final ChatManager mChatManager;
     private Optional<Chat> mChatObservable = Optional.absent();
     private final PostingMessageListener mPostingMessageListener;
-    
+
     public ConnectionManager(final XMPPTCPConnection connection,
-            final PostingMessageListener postingMessageListener) {
+                             final PostingMessageListener postingMessageListener) {
         mXMPPTCPConnection = connection;
         mPostingMessageListener = postingMessageListener;
         mChatManager = ChatManager.getInstanceFor(mXMPPTCPConnection);
@@ -56,7 +55,7 @@ public class ConnectionManager implements IChatManager {
 
     @Override
     public void login(final String user,
-            final String password) {
+                      final String password) {
         try {
             mXMPPTCPConnection.login(user, password);
             mXMPPTCPConnection.sendPacket(new Presence(available));
@@ -75,7 +74,7 @@ public class ConnectionManager implements IChatManager {
 
         if (!mChatObservable.isPresent()) {
             final Chat chat = mChatManager
-                    .createChat(getUserJID(resolveUser(currentUser), mXMPPTCPConnection),
+                    .createChat(currentUser,
                             mPostingMessageListener);
             chat.addMessageListener(mPostingMessageListener);
             mChatObservable = Optional.fromNullable(chat);
@@ -86,20 +85,5 @@ public class ConnectionManager implements IChatManager {
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }
-    }
-
-    private String resolveUser(final String currentUser) {
-
-        if (StringUtils.equals(currentUser, "paddy")) {
-            return "skarbek";
-        } else if (StringUtils.equals(currentUser, "skarbek")) {
-            return "paddy";
-        } else {
-            throw new IllegalStateException("User should be one of two available for now");
-        }
-    }
-
-    private String getUserJID(final String userId, final XMPPTCPConnection connection) {
-        return userId + "@" + connection.getServiceName();
     }
 }
