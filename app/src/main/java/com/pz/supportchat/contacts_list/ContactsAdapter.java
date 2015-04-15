@@ -68,10 +68,7 @@ public class ContactsAdapter extends BaseAdapter {
         for (final PresenceAwareRosterEntry rosterEntry : mRosterEntries) {
             if (StringUtils.equals(rosterEntry.getUser(), user)) {
                 mRosterEntries.get(mRosterEntries.indexOf(rosterEntry)).setPresence(available);
-            } else {
-                throw new IllegalStateException("User should be in the roster entry");
             }
         }
-
     }
 }
