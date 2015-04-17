@@ -1,5 +1,12 @@
 package com.pz.supportchat.login_to_chat;
 
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.MainThreadBus;
@@ -9,21 +16,9 @@ import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
 import com.pz.supportchat.xmpp.ConnectionManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 import com.squareup.otto.Subscribe;
-
+import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-
-import javax.inject.Inject;
-
-import butterknife.InjectView;
-import butterknife.OnClick;
-
 import static com.pz.supportchat.PostingConnectionChangeListener.XMPPConnectionStatus;
 
 
@@ -94,9 +89,7 @@ public class LoginToChatActivity extends InjectableActivity {
         startService(intents.getChatServiceIntent(LoginToChatActivity.this));
 
         mConnection = mXMPPConnectionProvider.getConnection();
-        buttonJoin.setEnabled(mConnection.isConnected());
         mBus.register(this);
-        buttonJoin.setEnabled(true);
 
         restoreLoginCredentials();
     }
