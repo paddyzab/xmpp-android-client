@@ -25,6 +25,10 @@ import org.jivesoftware.smack.packet.Presence;
 
 public class ContactsActivity extends InjectableActivity implements AddContactDialogListener {
 
+    private ContactsAdapter contactsAdapter;
+
+    public static final String DIALOG_FRAGMENT_TAG = "_dialog_fragment_add_user";
+
     @InjectView(R.id.contactsListView)
     public ListView contactsListView;
 
@@ -40,10 +44,18 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
     @Inject
     protected Intents mIntents;
 
-    private ContactsAdapter contactsAdapter;
+    @OnClick(R.id.buttonAddContact)
+    protected void addContact() {
+        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        final Fragment previousFragment = getFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG);
+        if (previousFragment != null) {
+            fragmentTransaction.remove(previousFragment);
+        }
+        fragmentTransaction.addToBackStack(null);
 
-    public static final int DIALOG_FRAGMENT = 1;
-    public static final String DIALOG_FRAGMENT_TAG = "_dialog_fragment_add_user";
+        final AddUserDialog addContactDialog = AddUserDialog.newInstance();
+        addContactDialog.show(fragmentTransaction, DIALOG_FRAGMENT_TAG);
+    }
 
     @Override
     public int getLayoutResource() {
@@ -87,18 +99,5 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
     public void onFinishEditDialog(final String user) {
         mRosterManager.addRosterEntry(user, mXMPPConnectionProvider.getConnection());
         contactsAdapter.notifyDataSetInvalidated();
-    }
-
-    @OnClick(R.id.buttonAddContact)
-    protected void addContact() {
-        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        final Fragment previousFragment = getFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG);
-        if (previousFragment != null) {
-            fragmentTransaction.remove(previousFragment);
-        }
-        fragmentTransaction.addToBackStack(null);
-
-        final AddUserDialog addContactDialog = AddUserDialog.newInstance();
-        addContactDialog.show(fragmentTransaction, DIALOG_FRAGMENT_TAG);
     }
 }

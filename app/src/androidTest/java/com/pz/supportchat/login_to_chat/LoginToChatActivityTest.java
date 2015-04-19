@@ -26,8 +26,6 @@ public class LoginToChatActivityTest extends ActivityInstrumentationTestCase2<Lo
         super(LoginToChatActivity.class);
     }
 
-
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
