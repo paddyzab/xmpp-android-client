@@ -33,7 +33,7 @@ public class ContactView extends RelativeLayout {
         ButterKnife.inject(this);
     }
 
-    public void setData(PresenceAwareRosterEntry rosterEntry, Context context) {
+    public void setData(final PresenceAwareRosterEntry rosterEntry, final Context context) {
         textViewUserName.setText(rosterEntry.getName());
         imageViewStatus.setBackgroundColor(setPresenceResource(rosterEntry.isPresent(), context));
     }

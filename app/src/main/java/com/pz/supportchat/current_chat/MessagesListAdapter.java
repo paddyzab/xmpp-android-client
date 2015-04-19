@@ -1,26 +1,23 @@
 package com.pz.supportchat.current_chat;
 
-import com.pz.supportchat.R;
-import com.pz.supportchat.commons.models.InternalMessage;
-
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
-
+import com.pz.supportchat.R;
+import com.pz.supportchat.commons.models.InternalMessage;
 import java.util.List;
 
 public class MessagesListAdapter extends BaseAdapter {
     
-    private final Context context;
     private final List<InternalMessage> mInternalMessages;
+    private final LayoutInflater mLayoutInflater;
 
     public MessagesListAdapter(final Context context, final List<InternalMessage> internalMessages) {
-        this.context = context;
         this.mInternalMessages = internalMessages;
+
+        mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     
     @Override
@@ -40,31 +37,28 @@ public class MessagesListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        
-        LayoutInflater mInflater = (LayoutInflater) context
-                .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
-        if (mInternalMessages.get(position).isSelf) {
-            convertView = mInflater.inflate(R.layout.message_self,
-                null);
+        MessageView messageView;
+
+        if (convertView == null) {
+            messageView = (MessageView) mLayoutInflater.inflate(R.layout.message_view, parent);
         } else {
-            convertView = mInflater.inflate(R.layout.message_other,
-                null);
+            messageView = (MessageView) convertView;
         }
 
-        ((TextView)convertView.findViewById(R.id.textViewMessage)).setText(mInternalMessages.get(position).message);
-        ((TextView)convertView.findViewById(R.id.textViewMessageFrom)).setText(mInternalMessages.get(position).fromName);
-        
-        return convertView;
+        final InternalMessage message = getItem(position);
+        messageView.setData(message);
+
+        return messageView;
     }
     
     public void updateMessages(final List<InternalMessage> internalMessages) {
         for (final InternalMessage internalMessage : internalMessages) {
-            this.mInternalMessages.add(internalMessage);
+            mInternalMessages.add(internalMessage);
         }
     }
 
     public void updateWithMessage(final InternalMessage internalMessage) {
-            this.mInternalMessages.add(internalMessage);
+            mInternalMessages.add(internalMessage);
     }
 }
