@@ -2,24 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:padding="8dp">
+                android:layout_height="@dimen/layout_normal"
+                android:padding="@dimen/margin_normal">
 
     <ImageView
-        android:id="@+id/imageViewStatus"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:background="@color/red"
-        android:layout_centerVertical="true"/>
+            android:id="@+id/imageViewStatus"
+            android:layout_width="@dimen/layout_small"
+            android:layout_height="@dimen/layout_small"
+            android:background="@color/red"
+            android:layout_centerVertical="true"/>
 
     <TextView
-        android:id="@+id/textViewUserName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imageViewStatus"
-        android:text="test test"
-        android:textColor="@color/primary_dark_material_dark"
-        android:layout_centerVertical="true"
-        android:paddingLeft="24dp"/>
-    
+            android:id="@+id/textViewUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/imageViewStatus"
+            android:textColor="@color/primary_dark_material_dark"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/margin_huge"/>
+
 </RelativeLayout>
