@@ -2,9 +2,11 @@ package com.pz.supportchat.login_to_chat;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.pz.supportchat.InjectableActivity;
@@ -13,21 +15,18 @@ import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.PostingConnectionChangeListener;
 import com.pz.supportchat.R;
 import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
-import com.pz.supportchat.xmpp.ConnectionManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 import com.squareup.otto.Subscribe;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import static android.view.View.VISIBLE;
 import static com.pz.supportchat.PostingConnectionChangeListener.XMPPConnectionStatus;
 
 
-public class LoginToChatActivity extends InjectableActivity {
+public class LoginToChatActivity extends InjectableActivity implements LoginView {
 
     private final String LOG_TAG = LoginToChatActivity.class.getSimpleName();
-
-    private final String PASSWORD_KEY = "_password";
-    private final String LOGIN_KEY = "_login";
 
     @Inject
     protected Intents intents;
@@ -36,16 +35,13 @@ public class LoginToChatActivity extends InjectableActivity {
     protected XMPPConnectionProvider mXMPPConnectionProvider;
 
     @Inject
-    protected ConnectionManager mConnectionManager;
-
-    @Inject
     protected MainThreadBus mBus;
 
     @Inject
-    protected PostingConnectionChangeListener mPostingConnectionChangeListener;
+    protected SharedPreferencesKeyValueStorage mSharedPreferencesKeyValueStorage;
 
     @Inject
-    protected SharedPreferencesKeyValueStorage mSharedPreferencesKeyValueStorage;
+    protected LoginPresenterImpl mLoginPresenter;
 
     @InjectView(R.id.editTextLogin)
     protected EditText editTextPickNickname;
@@ -59,26 +55,17 @@ public class LoginToChatActivity extends InjectableActivity {
     @InjectView(R.id.imageViewConnectionStatus)
     protected ImageView imageViewConnectionStatus;
 
+    @InjectView(R.id.progressBar)
+    protected ProgressBar progressBar;
+
     @OnClick(R.id.layoutConnectionStatus)
     protected void reconnect() {
-        if (!mConnection.isConnected()) {
-            mConnectionManager.connect(mPostingConnectionChangeListener);
-        }
+        mLoginPresenter.reconnectToServer();
     }
 
     @OnClick(R.id.buttonJoin)
     protected void clickJoin() {
-        if (validateNick()) {
-            editTextPickNickname.setError(null);
-            loginAndStartChat();
-
-            mSharedPreferencesKeyValueStorage.storeString(LOGIN_KEY,
-                    editTextPickNickname.getText().toString());
-            mSharedPreferencesKeyValueStorage
-                    .storeString(PASSWORD_KEY, editTextPassword.getText().toString());
-        } else {
-            editTextPickNickname.setError("You need choose a nickname.");
-        }
+        mLoginPresenter.validateCredentials(editTextPickNickname.getText().toString(), editTextPassword.getText().toString());
     }
 
     private XMPPTCPConnection mConnection;
@@ -90,6 +77,7 @@ public class LoginToChatActivity extends InjectableActivity {
 
         mConnection = mXMPPConnectionProvider.getConnection();
         mBus.register(this);
+        mLoginPresenter.setLoginView(this);
 
         restoreLoginCredentials();
     }
@@ -125,28 +113,39 @@ public class LoginToChatActivity extends InjectableActivity {
         return R.layout.login_to_chat;
     }
 
-    private void loginAndStartChat() {
-        mConnectionManager.login(editTextPickNickname.getText().toString(),
-                editTextPassword.getText().toString());
-
-        if (mConnection.isAuthenticated()) {
-            startActivity(
-                    intents.getContactsIntent(this));
-        }
-    }
-
-    private boolean validateNick() {
-        return StringUtils.isNotEmpty(editTextPickNickname.getText().toString()) && StringUtils
-                .isNotEmpty(editTextPassword.getText().toString());
-    }
-
     private void restoreLoginCredentials() {
-        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage.getString(LOGIN_KEY))) {
-            editTextPickNickname.setText(mSharedPreferencesKeyValueStorage.getString(LOGIN_KEY));
+        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage.getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY))) {
+            editTextPickNickname.setText(mSharedPreferencesKeyValueStorage.getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY));
         }
 
-        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage.getString(PASSWORD_KEY))) {
-            editTextPassword.setText(mSharedPreferencesKeyValueStorage.getString(PASSWORD_KEY));
+        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage.getString(mSharedPreferencesKeyValueStorage.PASSWORD_KEY))) {
+            editTextPassword.setText(mSharedPreferencesKeyValueStorage.getString(mSharedPreferencesKeyValueStorage.PASSWORD_KEY));
         }
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setUsernameError() {
+        editTextPickNickname.setError(getString(R.string.username_error));
+    }
+
+    @Override
+    public void setPasswordError() {
+        editTextPassword.setError(getString(R.string.password_error));
+    }
+
+    @Override
+    public void navigateToContactsList() {
+        startActivity(
+                intents.getContactsIntent(this));
     }
 }

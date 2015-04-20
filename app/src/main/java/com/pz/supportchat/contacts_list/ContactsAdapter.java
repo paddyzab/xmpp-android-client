@@ -41,7 +41,7 @@ public class ContactsAdapter extends BaseAdapter {
         ContactView contactView;
 
         if (convertView == null) {
-            contactView = (ContactView) mLayoutInflater.inflate(R.layout.contact_view, parent);
+            contactView = (ContactView) mLayoutInflater.inflate(R.layout.contact_view, parent, false);
         } else {
             contactView = (ContactView) convertView;
         }

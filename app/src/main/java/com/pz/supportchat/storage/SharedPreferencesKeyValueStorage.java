@@ -9,6 +9,9 @@ public class SharedPreferencesKeyValueStorage implements KeyValueStorage {
     private final SharedPreferences mSharedPreferences;
     private final String EMPTY_STRING = "";
 
+    public final String PASSWORD_KEY = "_password";
+    public final String LOGIN_KEY = "_login";
+
     public SharedPreferencesKeyValueStorage(final Context context, final String fileName) {
         mSharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
     }

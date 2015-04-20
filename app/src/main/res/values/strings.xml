@@ -9,6 +9,9 @@
     <string name="add_contact">Add contact</string>
     <string name="no_contacts_empty_list">No contacts added</string>
 
+    <string name="username_error">Username cannot be empty.</string>
+    <string name="password_error">Password cannot be empty</string>
+
     <string name="username_hint">type username</string>
     <string name="add_user_instructions">Add already registered user name to receive updates from that user.</string>
     <string name="add_user">ADD</string>
