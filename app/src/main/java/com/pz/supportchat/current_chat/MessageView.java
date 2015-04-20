@@ -31,7 +31,7 @@ public class MessageView extends RelativeLayout {
     public MessageView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        inflate(context, R.layout.message_view, this);
+        inflate(context, R.layout.message_view_self, this);
         ButterKnife.inject(this);
     }
 

@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import com.pz.supportchat.R;
 import com.pz.supportchat.commons.models.PresenceAwareRosterEntry;
 import java.util.List;
@@ -38,18 +40,26 @@ public class ContactsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ContactView contactView;
+        View view = convertView;
 
-        if (convertView == null) {
-            contactView = (ContactView) mLayoutInflater.inflate(R.layout.contact_view, parent, false);
-        } else {
-            contactView = (ContactView) convertView;
+        if (view == null) {
+            view = mLayoutInflater.inflate(R.layout.contact_view, parent, false);
         }
+        final TextView textViewUserName = (TextView) view.findViewById(R.id.textViewUserName);
+        final ImageView imageViewStatus = (ImageView) view.findViewById(R.id.imageViewStatus);
 
-        final PresenceAwareRosterEntry rosterEntry = getItem(position);
-        contactView.setData(rosterEntry, parent.getContext());
+        textViewUserName.setText(mRosterEntries.get(position).getName());
+        imageViewStatus.setBackgroundColor(resolvePresence(mRosterEntries.get(position).isPresent(), parent.getContext()));
 
-        return contactView;
+        return view;
+    }
+
+    private int resolvePresence(final boolean isPresent, final Context context) {
+        if (isPresent) {
+            return context.getResources().getColor(R.color.green);
+        } else {
+            return context.getResources().getColor(R.color.red);
+        }
     }
 
     public void switchContactAvailability(final String user, boolean available) {
