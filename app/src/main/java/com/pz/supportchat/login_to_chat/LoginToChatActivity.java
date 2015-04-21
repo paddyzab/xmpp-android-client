@@ -86,10 +86,7 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
     protected void onResume() {
         super.onResume();
         mLoginPresenter.onResume();
-        buttonJoin.setEnabled(mConnection.isConnected());
-        imageViewConnectionStatus.setBackgroundColor(mConnection.isConnected()
-                ? getResources().getColor(R.color.green)
-                : getResources().getColor(R.color.red));
+        makeConnectionAwareComponentsEnable(mConnection.isConnected());
     }
 
     @Override
@@ -97,35 +94,16 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
         super.onPause();
         mLoginPresenter.onPause();
     }
-    
+
     @Override
     public void connectionChanged(final XMPPConnectionStatus status) {
-        buttonJoin.setEnabled(
-                !StringUtils.equals(status.mStatus, PostingConnectionChangeListener.DISCONNECTED));
-
-        imageViewConnectionStatus.setBackgroundColor(
-                StringUtils.equals(status.mStatus, PostingConnectionChangeListener.CONNECTED)
-                        ? getResources().getColor(R.color.green)
-                        : getResources().getColor(R.color.red));
+        makeConnectionAwareComponentsEnable(
+                StringUtils.equals(status.mStatus, PostingConnectionChangeListener.CONNECTED));
     }
 
     @Override
     public int getLayoutResource() {
         return R.layout.login_to_chat;
-    }
-
-    private void restoreLoginCredentials() {
-        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage
-                .getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY))) {
-            editTextPickNickname.setText(mSharedPreferencesKeyValueStorage
-                    .getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY));
-        }
-
-        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage
-                .getString(mSharedPreferencesKeyValueStorage.PASSWORD_KEY))) {
-            editTextPassword.setText(mSharedPreferencesKeyValueStorage
-                    .getString(mSharedPreferencesKeyValueStorage.PASSWORD_KEY));
-        }
     }
 
     @Override
@@ -153,4 +131,26 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
         startActivity(
                 intents.getContactsIntent(this));
     }
+
+    private void restoreLoginCredentials() {
+        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage
+                .getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY))) {
+            editTextPickNickname.setText(mSharedPreferencesKeyValueStorage
+                    .getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY));
+        }
+
+        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage
+                .getString(mSharedPreferencesKeyValueStorage.PASSWORD_KEY))) {
+            editTextPassword.setText(mSharedPreferencesKeyValueStorage
+                    .getString(mSharedPreferencesKeyValueStorage.PASSWORD_KEY));
+        }
+    }
+
+    private void makeConnectionAwareComponentsEnable(boolean enabled) {
+        buttonJoin.setEnabled(enabled);
+        imageViewConnectionStatus.setBackgroundColor(enabled
+                ? getResources().getColor(R.color.green)
+                : getResources().getColor(R.color.red));
+    }
+
 }
