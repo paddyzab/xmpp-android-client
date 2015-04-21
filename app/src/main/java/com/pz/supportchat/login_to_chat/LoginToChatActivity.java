@@ -1,5 +1,15 @@
 package com.pz.supportchat.login_to_chat;
 
+import com.pz.supportchat.InjectableActivity;
+import com.pz.supportchat.Intents;
+import com.pz.supportchat.PostingConnectionChangeListener;
+import com.pz.supportchat.R;
+import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
+import com.pz.supportchat.xmpp.XMPPConnectionProvider;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -7,19 +17,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import javax.inject.Inject;
+
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.pz.supportchat.InjectableActivity;
-import com.pz.supportchat.Intents;
-import com.pz.supportchat.MainThreadBus;
-import com.pz.supportchat.PostingConnectionChangeListener;
-import com.pz.supportchat.R;
-import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
-import com.pz.supportchat.xmpp.XMPPConnectionProvider;
-import com.squareup.otto.Subscribe;
-import javax.inject.Inject;
-import org.apache.commons.lang3.StringUtils;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+
 import static android.view.View.VISIBLE;
 import static com.pz.supportchat.PostingConnectionChangeListener.XMPPConnectionStatus;
 
@@ -33,9 +36,6 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
 
     @Inject
     protected XMPPConnectionProvider mXMPPConnectionProvider;
-
-    @Inject
-    protected MainThreadBus mBus;
 
     @Inject
     protected SharedPreferencesKeyValueStorage mSharedPreferencesKeyValueStorage;
@@ -65,7 +65,8 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
 
     @OnClick(R.id.buttonJoin)
     protected void clickJoin() {
-        mLoginPresenter.validateCredentials(editTextPickNickname.getText().toString(), editTextPassword.getText().toString());
+        mLoginPresenter.validateCredentials(editTextPickNickname.getText().toString(),
+                editTextPassword.getText().toString());
     }
 
     private XMPPTCPConnection mConnection;
@@ -76,7 +77,6 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
         startService(intents.getChatServiceIntent(LoginToChatActivity.this));
 
         mConnection = mXMPPConnectionProvider.getConnection();
-        mBus.register(this);
         mLoginPresenter.setLoginView(this);
 
         restoreLoginCredentials();
@@ -85,6 +85,7 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
     @Override
     protected void onResume() {
         super.onResume();
+        mLoginPresenter.onResume();
         buttonJoin.setEnabled(mConnection.isConnected());
         imageViewConnectionStatus.setBackgroundColor(mConnection.isConnected()
                 ? getResources().getColor(R.color.green)
@@ -92,13 +93,13 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mBus.unregister(this);
+    protected void onPause() {
+        super.onPause();
+        mLoginPresenter.onPause();
     }
-
-    @Subscribe
-    public void onConnectionStatusChange(final XMPPConnectionStatus status) {
+    
+    @Override
+    public void connectionChanged(final XMPPConnectionStatus status) {
         buttonJoin.setEnabled(
                 !StringUtils.equals(status.mStatus, PostingConnectionChangeListener.DISCONNECTED));
 
@@ -114,12 +115,16 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
     }
 
     private void restoreLoginCredentials() {
-        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage.getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY))) {
-            editTextPickNickname.setText(mSharedPreferencesKeyValueStorage.getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY));
+        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage
+                .getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY))) {
+            editTextPickNickname.setText(mSharedPreferencesKeyValueStorage
+                    .getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY));
         }
 
-        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage.getString(mSharedPreferencesKeyValueStorage.PASSWORD_KEY))) {
-            editTextPassword.setText(mSharedPreferencesKeyValueStorage.getString(mSharedPreferencesKeyValueStorage.PASSWORD_KEY));
+        if (!TextUtils.isEmpty(mSharedPreferencesKeyValueStorage
+                .getString(mSharedPreferencesKeyValueStorage.PASSWORD_KEY))) {
+            editTextPassword.setText(mSharedPreferencesKeyValueStorage
+                    .getString(mSharedPreferencesKeyValueStorage.PASSWORD_KEY));
         }
     }
 
