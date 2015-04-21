@@ -1,13 +1,15 @@
 package com.pz.supportchat.current_chat;
 
+import com.pz.supportchat.R;
+import com.pz.supportchat.commons.models.InternalMessage;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.pz.supportchat.R;
-import com.pz.supportchat.commons.models.InternalMessage;
 
 public class MessageView extends RelativeLayout {
 
@@ -30,8 +32,11 @@ public class MessageView extends RelativeLayout {
 
     public MessageView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
 
-        inflate(context, R.layout.message_view_self, this);
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
         ButterKnife.inject(this);
     }
 

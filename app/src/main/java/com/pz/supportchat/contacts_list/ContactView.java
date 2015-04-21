@@ -1,14 +1,16 @@
 package com.pz.supportchat.contacts_list;
 
+import com.pz.supportchat.R;
+import com.pz.supportchat.commons.models.PresenceAwareRosterEntry;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.pz.supportchat.R;
-import com.pz.supportchat.commons.models.PresenceAwareRosterEntry;
 
 public class ContactView extends RelativeLayout {
 
@@ -28,8 +30,11 @@ public class ContactView extends RelativeLayout {
 
     public ContactView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
 
-        inflate(context, R.layout.contact_view, this);
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
         ButterKnife.inject(this);
     }
 

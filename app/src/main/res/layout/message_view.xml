@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.pz.supportchat.current_chat.MessageView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -8,8 +8,7 @@
     <RelativeLayout android:id="@+id/relativeLayoutContainer"
                     android:layout_width="@dimen/layout_edit_text"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:background="@color/detail1">>
+                    android:layout_alignParentRight="true">
 
         <TextView
                 android:id="@+id/textViewMessageFrom"
@@ -31,4 +30,4 @@
                 android:layout_alignParentRight="true"/>
     </RelativeLayout>
 
-</RelativeLayout>
+</com.pz.supportchat.current_chat.MessageView>

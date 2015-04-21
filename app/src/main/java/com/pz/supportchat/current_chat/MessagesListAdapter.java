@@ -1,13 +1,14 @@
 package com.pz.supportchat.current_chat;
 
+import com.pz.supportchat.R;
+import com.pz.supportchat.commons.models.InternalMessage;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
-import com.pz.supportchat.R;
-import com.pz.supportchat.commons.models.InternalMessage;
+
 import java.util.List;
 
 public class MessagesListAdapter extends BaseAdapter {
@@ -38,19 +39,18 @@ public class MessagesListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
+        MessageView messageView;
 
-        if (mInternalMessages.get(position).isSelf) {
-            convertView = mLayoutInflater.inflate(R.layout.message_view_self,
-                    null);
+        if (convertView == null) {
+            messageView = (MessageView) mLayoutInflater.inflate(R.layout.message_view, parent, false);
         } else {
-            convertView = mLayoutInflater.inflate(R.layout.message_view_others,
-                    null);
+            messageView = (MessageView) convertView;
         }
 
-        ((TextView) convertView.findViewById(R.id.textViewMessage)).setText(mInternalMessages.get(position).message);
-        ((TextView) convertView.findViewById(R.id.textViewMessageFrom)).setText(mInternalMessages.get(position).fromName);
+        final InternalMessage message = getItem(position);
+        messageView.setData(message);
 
-        return convertView;
+        return messageView;
     }
 
     public void updateMessages(final List<InternalMessage> internalMessages) {
