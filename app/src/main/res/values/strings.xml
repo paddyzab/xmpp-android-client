@@ -16,4 +16,5 @@
     <string name="add_user_instructions">Add already registered user name to receive updates from that user.</string>
     <string name="add_user">ADD</string>
     <string name="cancel" tools:ignore="ButtonCase">CANCEL</string>
+    <string name="send">Send</string>
 </resources>
