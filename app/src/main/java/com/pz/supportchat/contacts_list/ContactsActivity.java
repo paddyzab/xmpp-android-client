@@ -1,14 +1,7 @@
 package com.pz.supportchat.contacts_list;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import butterknife.InjectView;
-import butterknife.OnClick;
 import com.google.common.collect.Lists;
+
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.MainThreadBus;
@@ -19,9 +12,23 @@ import com.pz.supportchat.utils.StringUtils;
 import com.pz.supportchat.xmpp.RosterManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 import com.squareup.otto.Subscribe;
-import java.util.List;
-import javax.inject.Inject;
+
 import org.jivesoftware.smack.packet.Presence;
+
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class ContactsActivity extends InjectableActivity implements AddContactDialogListener {
 
@@ -30,7 +37,10 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
     public static final String DIALOG_FRAGMENT_TAG = "_dialog_fragment_add_user";
 
     @InjectView(R.id.contactsListView)
-    public ListView contactsListView;
+    protected ListView contactsListView;
+
+    @InjectView(R.id.empty)
+    protected TextView textViewEmpty;
 
     @Inject
     protected RosterManager mRosterManager;
@@ -47,7 +57,8 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
     @OnClick(R.id.buttonAddContact)
     protected void addContact() {
         final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        final Fragment previousFragment = getFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG);
+        final Fragment previousFragment = getFragmentManager()
+                .findFragmentByTag(DIALOG_FRAGMENT_TAG);
         if (previousFragment != null) {
             fragmentTransaction.remove(previousFragment);
         }
@@ -74,11 +85,21 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
         contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(mIntents.getCurrentChatIntent(ContactsActivity.this, contactsAdapter.getItem(position).getName()));
+                startActivity(mIntents.getCurrentChatIntent(ContactsActivity.this,
+                        contactsAdapter.getItem(position).getName()));
             }
         });
 
+        resolveEmptyList(contactsAdapter.getCount());
+
         mBus.register(this);
+    }
+
+    private void resolveEmptyList(int count) {
+        textViewEmpty.setVisibility(count == 0 ?
+                View.VISIBLE : View.GONE);
+        contactsListView.setVisibility(count == 0 ?
+                View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -91,7 +112,8 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
     public void onPresenceChanged(final PresenceChangedEvent event) {
         final Presence presence = event.presence;
 
-        contactsAdapter.switchContactAvailability(StringUtils.parseBareAddress(presence.getFrom()), presence.isAvailable());
+        contactsAdapter.switchContactAvailability(StringUtils.parseBareAddress(presence.getFrom()),
+                presence.isAvailable());
         contactsAdapter.notifyDataSetInvalidated();
     }
 
@@ -99,5 +121,6 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
     public void onFinishEditDialog(final String user) {
         mRosterManager.addRosterEntry(user, mXMPPConnectionProvider.getConnection());
         contactsAdapter.notifyDataSetInvalidated();
+        resolveEmptyList(contactsAdapter.getCount());
     }
 }
