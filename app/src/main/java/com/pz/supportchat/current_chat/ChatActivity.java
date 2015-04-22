@@ -8,6 +8,7 @@ import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.R;
 import com.pz.supportchat.bus_events.NewMessageEvent;
 import com.pz.supportchat.commons.models.InternalMessage;
+import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
 import com.pz.supportchat.xmpp.ConnectionManager;
 import com.squareup.otto.Subscribe;
 
@@ -33,13 +34,16 @@ public class ChatActivity extends InjectableActivity {
     @Inject
     protected ConnectionManager mConnectionManager;
 
+    @Inject
+    protected SharedPreferencesKeyValueStorage mSharedPreferencesKeyValueStorage;
+
     @InjectView(R.id.listViewMessages)
     protected ListView listViewMessages;
 
     @InjectView(R.id.editTextInputMessage)
     protected EditText editTextInputMessage;
 
-    private String currentUser;
+    private String currentChatUser;
     private MessagesListAdapter messagesListAdapter;
 
     @OnClick(R.id.buttonSend)
@@ -53,14 +57,15 @@ public class ChatActivity extends InjectableActivity {
     }
 
     private void sendNewMessage() {
-        final InternalMessage newInternalMessage = new InternalMessage(currentUser,
+        final InternalMessage newInternalMessage = new InternalMessage(
+                mSharedPreferencesKeyValueStorage
+                        .getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY),
                 editTextInputMessage.getText().toString(),
                 true);
+        messagesListAdapter.updateWithMessage(newInternalMessage);
 
         mConnectionManager.sendMessage(editTextInputMessage.getText().toString(),
-                currentUser);
-
-        messagesListAdapter.updateWithMessage(newInternalMessage);
+                currentChatUser);
         messagesListAdapter.notifyDataSetChanged();
     }
 
@@ -74,12 +79,7 @@ public class ChatActivity extends InjectableActivity {
         super.onCreate(savedInstanceState);
 
         final Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            currentUser = extras.getString(Intents.NICKNAME_KEY);
-            Toast.makeText(ChatActivity.this, "Welcome: " + currentUser, Toast.LENGTH_SHORT)
-                    .show();
-        }
-
+        currentChatUser = extras.getString(Intents.NICKNAME_KEY);
         messagesListAdapter = new MessagesListAdapter(ChatActivity.this,
                 Lists.<InternalMessage>newArrayList());
         listViewMessages.setAdapter(messagesListAdapter);

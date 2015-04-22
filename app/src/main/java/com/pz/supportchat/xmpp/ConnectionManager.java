@@ -1,8 +1,9 @@
 package com.pz.supportchat.xmpp;
 
 import com.google.common.base.Optional;
+
 import com.pz.supportchat.PostingMessageListener;
-import java.io.IOException;
+
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -11,6 +12,9 @@ import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+
+import java.io.IOException;
+
 import static org.jivesoftware.smack.packet.Presence.Type.available;
 
 public class ConnectionManager implements IChatManager {
@@ -21,7 +25,7 @@ public class ConnectionManager implements IChatManager {
     private final PostingMessageListener mPostingMessageListener;
 
     public ConnectionManager(final XMPPTCPConnection connection,
-                             final PostingMessageListener postingMessageListener) {
+            final PostingMessageListener postingMessageListener) {
         mXMPPTCPConnection = connection;
         mPostingMessageListener = postingMessageListener;
         mChatManager = ChatManager.getInstanceFor(mXMPPTCPConnection);
@@ -55,7 +59,7 @@ public class ConnectionManager implements IChatManager {
 
     @Override
     public void login(final String user,
-                      final String password) {
+            final String password) {
         try {
             mXMPPTCPConnection.login(user, password);
             mXMPPTCPConnection.sendPacket(new Presence(available));
@@ -74,7 +78,7 @@ public class ConnectionManager implements IChatManager {
 
         if (!mChatObservable.isPresent()) {
             final Chat chat = mChatManager
-                    .createChat(currentUser,
+                    .createChat(currentUser + "@" + XMPPConnectionProvider.SERVER_HOST,
                             mPostingMessageListener);
             chat.addMessageListener(mPostingMessageListener);
             mChatObservable = Optional.fromNullable(chat);
