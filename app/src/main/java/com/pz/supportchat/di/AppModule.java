@@ -15,7 +15,8 @@ import dagger.Provides;
 @Module(includes = {
         DataModule.class,
         UiModule.class,
-        XMPPModule.class
+        XMPPModule.class,
+        NotificationModule.class
         },injects = {
         App.class,
         NetworkChangeReceiver.class,

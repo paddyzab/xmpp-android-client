@@ -1,16 +1,19 @@
 package com.pz.supportchat;
 
-import android.app.Activity;
-import android.content.Intent;
 import com.pz.supportchat.contacts_list.ContactsActivity;
 import com.pz.supportchat.current_chat.ChatActivity;
+import com.pz.supportchat.notifications.NotificationService;
 import com.pz.supportchat.xmpp.ChatService;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 
 final public class Intents {
 
     public static final String NICKNAME_KEY = "_nickname";
 
-    public Intent getCurrentChatIntent(final Activity from, final String nickname) {
+    public Intent getCurrentChatIntent(final Context from, final String nickname) {
         final Intent intent = new Intent(from, ChatActivity.class);
         intent.putExtra(NICKNAME_KEY, nickname);
 
@@ -26,5 +29,9 @@ final public class Intents {
         intent.setAction(ChatService.CHAT_SERVICE_ACTION_START);
 
         return intent;
+    }
+
+    public Intent getNotificationService(final Activity from) {
+        return new Intent(from, NotificationService.class);
     }
 }

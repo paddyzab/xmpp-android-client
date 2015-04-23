@@ -91,6 +91,7 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
         });
 
         resolveEmptyList(contactsAdapter.getCount());
+        startService(mIntents.getNotificationService(this));
 
         mBus.register(this);
     }
