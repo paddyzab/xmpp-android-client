@@ -1,28 +1,31 @@
 package com.pz.supportchat.login_to_chat;
 
-import com.pz.supportchat.InjectableActivity;
-import com.pz.supportchat.Intents;
-import com.pz.supportchat.PostingConnectionChangeListener;
-import com.pz.supportchat.R;
-import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
-import com.pz.supportchat.xmpp.XMPPConnectionProvider;
-
-import org.apache.commons.lang3.StringUtils;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-
-import javax.inject.Inject;
-
 import butterknife.InjectView;
 import butterknife.OnClick;
-
+import com.pz.supportchat.InjectableActivity;
+import com.pz.supportchat.Intents;
+import com.pz.supportchat.MainThreadBus;
+import com.pz.supportchat.PostingConnectionChangeListener;
+import com.pz.supportchat.R;
+import com.pz.supportchat.notifications.NotificationService;
+import com.pz.supportchat.notifications.NotificationsProvider;
+import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
+import com.pz.supportchat.xmpp.XMPPConnectionProvider;
+import javax.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import static android.view.View.VISIBLE;
 import static com.pz.supportchat.PostingConnectionChangeListener.XMPPConnectionStatus;
 
@@ -42,6 +45,12 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
 
     @Inject
     protected LoginPresenterImpl mLoginPresenter;
+
+    @Inject
+    protected MainThreadBus mBus;
+
+    @Inject
+    protected NotificationsProvider mNotificationsProvider;
 
     @InjectView(R.id.editTextLogin)
     protected EditText editTextPickNickname;
@@ -74,13 +83,29 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startService(intents.getChatServiceIntent(LoginToChatActivity.this));
+
+        Intent chatServiceIntent = intents.getNotificationService(LoginToChatActivity.this);
+        bindService(chatServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
         mConnection = mXMPPConnectionProvider.getConnection();
         mLoginPresenter.setLoginView(this);
 
         restoreLoginCredentials();
     }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            final NotificationService.INotificationService notificationService = (NotificationService.INotificationService) service;
+            notificationService.startNotificationService(mBus, mNotificationsProvider);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     @Override
     protected void onResume() {
