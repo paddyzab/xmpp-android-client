@@ -1,11 +1,6 @@
 package com.pz.supportchat.login_to_chat;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +14,6 @@ import com.pz.supportchat.Intents;
 import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.PostingConnectionChangeListener;
 import com.pz.supportchat.R;
-import com.pz.supportchat.notifications.NotificationService;
 import com.pz.supportchat.notifications.NotificationsProvider;
 import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
@@ -83,29 +77,14 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent chatServiceIntent = intents.getNotificationService(LoginToChatActivity.this);
-        bindService(chatServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        startService(intents.getChatServiceIntent(LoginToChatActivity.this));
+        startService(intents.getNotificationService(LoginToChatActivity.this));
 
         mConnection = mXMPPConnectionProvider.getConnection();
         mLoginPresenter.setLoginView(this);
 
         restoreLoginCredentials();
     }
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            final NotificationService.INotificationService notificationService = (NotificationService.INotificationService) service;
-            notificationService.startNotificationService(mBus, mNotificationsProvider);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
     @Override
     protected void onResume() {

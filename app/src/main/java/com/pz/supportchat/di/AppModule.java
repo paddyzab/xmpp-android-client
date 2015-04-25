@@ -5,6 +5,7 @@ import com.pz.supportchat.App;
 import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.NetworkChangeReceiver;
 import com.pz.supportchat.PostingConnectionChangeListener;
+import com.pz.supportchat.notifications.NotificationService;
 import com.pz.supportchat.notifications.NotificationsProvider;
 import dagger.Module;
 import dagger.Provides;
@@ -19,6 +20,7 @@ import javax.inject.Singleton;
         NetworkChangeReceiver.class,
         PostingConnectionChangeListener.class,
         MainThreadBus.class,
+        NotificationService.class,
         NotificationsProvider.class
 })
 final class AppModule {
