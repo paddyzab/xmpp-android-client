@@ -1,5 +1,6 @@
 package com.pz.supportchat.notifications;
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -17,6 +18,9 @@ public class NotificationService extends Service {
     @Inject
     protected MainThreadBus mBus;
 
+    private NotificationManager notificationManager;
+    private final static int NEW_MESSAGE_ID = 1;
+
     public NotificationService() {
         super();
     }
@@ -27,6 +31,8 @@ public class NotificationService extends Service {
         App.get(this).inject(this);
 
         mBus.register(this);
+        notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
 
     @Override
@@ -36,7 +42,7 @@ public class NotificationService extends Service {
 
     @Subscribe
     public void onNewMessageRecieved(final NewMessageEvent newMessageEvent) {
-        mNotificationsProvider.getNewMessageNotification(this, newMessageEvent.mInternalMessage);
+        notificationManager.notify(NEW_MESSAGE_ID, mNotificationsProvider.getNewMessageNotification(this, newMessageEvent.mInternalMessage));
     }
 
     @Override

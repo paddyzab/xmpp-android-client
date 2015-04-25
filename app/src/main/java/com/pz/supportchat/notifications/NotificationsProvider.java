@@ -9,27 +9,30 @@ import android.support.v4.app.NotificationCompat;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.commons.models.InternalMessage;
 import com.pz.supportchat.current_chat.ChatActivity;
+import com.pz.supportchat.utils.StringUtils;
 
 public class NotificationsProvider {
 
     private Intents mIntents;
 
     public NotificationsProvider(final Intents intents) {
-       mIntents = intents;
+        mIntents = intents;
     }
 
     public Notification getNewMessageNotification(final Context context,
-            final InternalMessage message) {
+                                                  final InternalMessage message) {
+
         final NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setContentTitle("New message")
+                        .setSmallIcon(android.R.drawable.ic_dialog_email)
+                        .setContentTitle(getFormattedUserString(message))
                         .setContentText(message.message);
         final Intent resultIntent = mIntents.getCurrentChatIntent(context, message.fromName);
 
         final TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(ChatActivity.class);
         stackBuilder.addNextIntent(resultIntent);
-        
+
         final PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
                         0,
@@ -38,6 +41,10 @@ public class NotificationsProvider {
         mBuilder.setContentIntent(resultPendingIntent);
 
         return mBuilder.build();
+    }
+
+    private String getFormattedUserString(InternalMessage message) {
+        return "New message from: " + StringUtils.parseBareUsername(message.fromName);
     }
 
 }
