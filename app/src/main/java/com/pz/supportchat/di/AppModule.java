@@ -2,6 +2,7 @@ package com.pz.supportchat.di;
 
 import android.app.Application;
 import com.pz.supportchat.App;
+import com.pz.supportchat.Intents;
 import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.NetworkChangeReceiver;
 import com.pz.supportchat.PostingConnectionChangeListener;
@@ -40,5 +41,10 @@ final class AppModule {
     @Singleton
     MainThreadBus provideBus() {
         return new MainThreadBus();
+    }
+
+    @Provides
+    NotificationsProvider provideNotificationsProvider(Intents intents) {
+        return new NotificationsProvider(intents);
     }
 }

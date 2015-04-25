@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 public class NotificationService extends Service {
 
-
+    @Inject
     protected NotificationsProvider mNotificationsProvider;
 
     @Inject
