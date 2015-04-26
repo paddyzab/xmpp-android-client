@@ -2,6 +2,7 @@ package com.pz.supportchat.current_chat;
 
 import com.pz.supportchat.R;
 import com.pz.supportchat.commons.models.InternalMessage;
+import com.pz.supportchat.utils.StringUtils;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.pz.supportchat.utils.StringUtils;
 
 public class MessageView extends RelativeLayout {
 
@@ -22,6 +22,9 @@ public class MessageView extends RelativeLayout {
 
     @InjectView(R.id.relativeLayoutContainer)
     protected RelativeLayout relativeLayoutContainer;
+
+    @InjectView(R.id.messageView)
+    protected MessageView messageView;
 
     public MessageView(final Context context) {
         this(context, null);
@@ -47,11 +50,16 @@ public class MessageView extends RelativeLayout {
         setMessageBackground(relativeLayoutContainer, internalMessage.isSelf);
     }
 
-    private void setMessageBackground(final RelativeLayout relativeLayoutContainer, final boolean isSelf) {
-        if(isSelf) {
-            relativeLayoutContainer.setBackgroundColor(getContext().getResources().getColor(R.color.detail1));
+    private void setMessageBackground(final RelativeLayout relativeLayoutContainer,
+            final boolean isSelf) {
+        if (isSelf) {
+            relativeLayoutContainer
+                    .setBackgroundColor(getContext().getResources().getColor(R.color.detail1));
+            messageView.setGravity(ALIGN_RIGHT);
         } else {
-            relativeLayoutContainer.setBackgroundColor(getContext().getResources().getColor(R.color.detail2));
+            relativeLayoutContainer
+                    .setBackgroundColor(getContext().getResources().getColor(R.color.detail2));
+            messageView.setGravity(ALIGN_LEFT);
         }
     }
 }

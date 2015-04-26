@@ -15,6 +15,7 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -30,8 +31,13 @@ android {
         }
     }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    
     packagingOptions {
         exclude 'LICENSE'
+        exclude 'LICENSE.txt'
         exclude 'NOTICE'
         exclude 'asm-license.txt'
     }
@@ -60,7 +66,7 @@ dependencies {
 
     androidTestCompile 'org.mockito:mockito-core:2.0.5-beta'
     androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
-    androidTestCompile 'junit:junit:4.11'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
 }
 
 configurations.all {
