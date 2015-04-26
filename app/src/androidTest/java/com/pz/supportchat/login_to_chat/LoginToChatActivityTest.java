@@ -1,14 +1,15 @@
 package com.pz.supportchat.login_to_chat;
 
+import com.pz.supportchat.MainThreadBus;
+import com.pz.supportchat.R;
+
+import org.mockito.Mock;
+
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.UiThreadTest;
 import android.widget.Button;
 import android.widget.EditText;
-import com.pz.supportchat.MainThreadBus;
-import com.pz.supportchat.PostingConnectionChangeListener;
-import com.pz.supportchat.R;
-import org.mockito.Mock;
-import static com.pz.supportchat.PostingConnectionChangeListener.XMPPConnectionStatus;
+
 import static org.assertj.android.api.Assertions.assertThat;
 
 public class LoginToChatActivityTest extends ActivityInstrumentationTestCase2<LoginToChatActivity> {
@@ -58,15 +59,16 @@ public class LoginToChatActivityTest extends ActivityInstrumentationTestCase2<Lo
 
         buttonJoin.performClick();
 
-        assertThat(editTextLogin).hasError("You need choose a nickname.");
+        assertThat(editTextLogin).hasError("Username cannot be empty.");
     }
 
+    // This needs to be migrated behind dagger
     private void givenAppIsConnectedToTheServer() {
-        testedActivity.onConnectionStatusChange(new XMPPConnectionStatus(PostingConnectionChangeListener.CONNECTED));
+       // testedActivity.onConnectionStatusChange(new XMPPConnectionStatus(PostingConnectionChangeListener.CONNECTED));
     }
 
     private void givenAppIsNotConnectedToTheServer() {
-        testedActivity.onConnectionStatusChange(new XMPPConnectionStatus(PostingConnectionChangeListener.DISCONNECTED));
+       // testedActivity.onConnectionStatusChange(new XMPPConnectionStatus(PostingConnectionChangeListener.DISCONNECTED));
     }
 
     private void givenUserDataAreEmpty() {
