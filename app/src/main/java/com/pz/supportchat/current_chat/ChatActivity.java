@@ -34,15 +34,16 @@ public class ChatActivity extends InjectableActivity {
     @Inject
     protected SharedPreferencesKeyValueStorage mSharedPreferencesKeyValueStorage;
 
+    @Inject
+    protected ChatDataFragment chatDataFragment;
+
     @InjectView(R.id.listViewMessages)
     protected ListView listViewMessages;
 
     @InjectView(R.id.editTextInputMessage)
     protected EditText editTextInputMessage;
-
     private String currentChatUser;
     private MessagesListAdapter messagesListAdapter;
-    private ChatDataFragment chatDataFragment;
 
     @OnClick(R.id.buttonSend)
     protected void sendMessage() {

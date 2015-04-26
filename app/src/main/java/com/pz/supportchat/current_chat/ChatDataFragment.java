@@ -1,19 +1,16 @@
 package com.pz.supportchat.current_chat;
 
-import android.app.Fragment;
-import android.os.Bundle;
+import com.pz.supportchat.xmpp.InjectableDataFragment;
+import javax.inject.Inject;
 
-public class ChatDataFragment extends Fragment {
+public class ChatDataFragment extends InjectableDataFragment<ChatViewModel> {
 
 
     public final static String CHAT_DATA_FRAGMENT_KEY = "_chat_data_fragment";
     private ChatViewModel mChatViewModel;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setRetainInstance(true);
+    @Inject
+    public ChatDataFragment() {
     }
 
     public void setData(final ChatViewModel viewModel) {
