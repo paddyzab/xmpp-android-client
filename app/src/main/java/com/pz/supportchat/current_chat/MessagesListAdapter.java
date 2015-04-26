@@ -62,4 +62,8 @@ public class MessagesListAdapter extends BaseAdapter {
     public void updateWithMessage(final InternalMessage internalMessage) {
         mInternalMessages.add(internalMessage);
     }
+
+    public List<InternalMessage> getMessages() {
+        return mInternalMessages;
+    }
 }
