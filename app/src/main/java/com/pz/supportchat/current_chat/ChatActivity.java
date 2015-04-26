@@ -34,15 +34,16 @@ public class ChatActivity extends InjectableActivity {
     @Inject
     protected SharedPreferencesKeyValueStorage mSharedPreferencesKeyValueStorage;
 
+    @Inject
+    protected ChatDataFragment chatDataFragment;
+
     @InjectView(R.id.listViewMessages)
     protected ListView listViewMessages;
 
     @InjectView(R.id.editTextInputMessage)
     protected EditText editTextInputMessage;
-
     private String currentChatUser;
     private MessagesListAdapter messagesListAdapter;
-    private ChatDataFragment chatDataFragment;
 
     @OnClick(R.id.buttonSend)
     protected void sendMessage() {
@@ -88,7 +89,6 @@ public class ChatActivity extends InjectableActivity {
         chatDataFragment = (ChatDataFragment) fragmentManager.findFragmentByTag(CHAT_DATA_FRAGMENT_KEY);
 
         if (chatDataFragment == null) {
-            chatDataFragment = new ChatDataFragment();
             fragmentManager.beginTransaction().add(chatDataFragment, CHAT_DATA_FRAGMENT_KEY).commit();
             chatDataFragment.setData(new ChatViewModel(messagesListAdapter.getMessages()));
         } else {

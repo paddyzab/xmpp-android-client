@@ -1,5 +1,6 @@
 package com.pz.supportchat.di;
 
+import com.pz.supportchat.current_chat.ChatDataFragment;
 import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
 
 import android.app.Application;
@@ -11,6 +12,9 @@ import dagger.Provides;
 
 
 @Module(
+        injects = {
+                ChatDataFragment.class
+        },
         complete = false,
         library = true
 )
