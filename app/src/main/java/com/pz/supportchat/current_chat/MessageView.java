@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.pz.supportchat.utils.StringUtils;
 
 public class MessageView extends RelativeLayout {
 
@@ -42,7 +43,7 @@ public class MessageView extends RelativeLayout {
 
     public void setData(final InternalMessage internalMessage) {
         textViewMessage.setText(internalMessage.message);
-        textViewMessageFrom.setText(internalMessage.fromName);
+        textViewMessageFrom.setText(StringUtils.parseBareUsername(internalMessage.fromName));
         setMessageBackground(relativeLayoutContainer, internalMessage.isSelf);
     }
 

@@ -33,6 +33,7 @@ final class XMPPModule {
     }
 
     @Provides
+    @Singleton
     ConnectionManager provideChatManager(final XMPPConnectionProvider xmppConnectionProvider, final PostingMessageListener postingMessageListener) {
         return new ConnectionManager(xmppConnectionProvider.getConnection(), postingMessageListener);
     }
