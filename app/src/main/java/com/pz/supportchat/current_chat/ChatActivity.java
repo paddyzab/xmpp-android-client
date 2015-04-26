@@ -1,7 +1,13 @@
 package com.pz.supportchat.current_chat;
 
+import android.app.FragmentManager;
+import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import com.google.common.collect.Lists;
-
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.MainThreadBus;
@@ -11,22 +17,13 @@ import com.pz.supportchat.commons.models.InternalMessage;
 import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
 import com.pz.supportchat.xmpp.ConnectionManager;
 import com.squareup.otto.Subscribe;
-
-import org.apache.commons.lang3.StringUtils;
-
-import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Toast;
-
 import javax.inject.Inject;
-
-import butterknife.InjectView;
-import butterknife.OnClick;
+import org.apache.commons.lang3.StringUtils;
+import static com.pz.supportchat.current_chat.ChatDataFragment.*;
 
 public class ChatActivity extends InjectableActivity {
 
-    private final static String EMPTY_STRING = "";
+    public final static String EMPTY_STRING = "";
 
     @Inject
     protected MainThreadBus mBus;
@@ -45,6 +42,7 @@ public class ChatActivity extends InjectableActivity {
 
     private String currentChatUser;
     private MessagesListAdapter messagesListAdapter;
+    private ChatDataFragment chatDataFragment;
 
     @OnClick(R.id.buttonSend)
     protected void sendMessage() {
@@ -52,7 +50,7 @@ public class ChatActivity extends InjectableActivity {
             sendNewMessage();
             editTextInputMessage.setText(EMPTY_STRING);
         } else {
-            Toast.makeText(ChatActivity.this, "Add a message", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChatActivity.this, "Hey, add a message before", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -85,6 +83,17 @@ public class ChatActivity extends InjectableActivity {
         listViewMessages.setAdapter(messagesListAdapter);
 
         messagesListAdapter.notifyDataSetChanged();
+
+        final FragmentManager fragmentManager = getFragmentManager();
+        chatDataFragment = (ChatDataFragment) fragmentManager.findFragmentByTag(CHAT_DATA_FRAGMENT_KEY);
+
+        if (chatDataFragment == null) {
+            chatDataFragment = new ChatDataFragment();
+            fragmentManager.beginTransaction().add(chatDataFragment, CHAT_DATA_FRAGMENT_KEY).commit();
+            chatDataFragment.setData(new ChatViewModel(messagesListAdapter.getMessages()));
+        } else {
+            messagesListAdapter.updateMessages(chatDataFragment.getData().mMessageList);
+        }
     }
 
     @Subscribe
@@ -104,6 +113,13 @@ public class ChatActivity extends InjectableActivity {
     protected void onPause() {
         super.onPause();
         mBus.unregister(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        chatDataFragment.setData(new ChatViewModel(messagesListAdapter.getMessages()));
     }
 
     private boolean validateMessage() {
