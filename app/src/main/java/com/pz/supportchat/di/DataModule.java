@@ -1,20 +1,13 @@
 package com.pz.supportchat.di;
 
-import com.pz.supportchat.current_chat.ChatDataFragment;
-import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
-
 import android.app.Application;
-
-import javax.inject.Singleton;
-
+import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
 
 
 @Module(
-        injects = {
-                ChatDataFragment.class
-        },
         complete = false,
         library = true
 )

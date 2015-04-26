@@ -89,6 +89,7 @@ public class ChatActivity extends InjectableActivity {
         chatDataFragment = (ChatDataFragment) fragmentManager.findFragmentByTag(CHAT_DATA_FRAGMENT_KEY);
 
         if (chatDataFragment == null) {
+            chatDataFragment = new ChatDataFragment();
             fragmentManager.beginTransaction().add(chatDataFragment, CHAT_DATA_FRAGMENT_KEY).commit();
             chatDataFragment.setData(new ChatViewModel(messagesListAdapter.getMessages()));
         } else {

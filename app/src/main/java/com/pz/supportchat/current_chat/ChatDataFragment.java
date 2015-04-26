@@ -11,7 +11,6 @@ public class ChatDataFragment extends InjectableDataFragment<ChatViewModel> {
 
     @Inject
     public ChatDataFragment() {
-
     }
 
     public void setData(final ChatViewModel viewModel) {
