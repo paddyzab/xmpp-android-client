@@ -67,6 +67,9 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-core:2.0.5-beta'
     androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
+
+    androidTestCompile 'junit:junit:4.12'
+
 }
 
 configurations.all {
