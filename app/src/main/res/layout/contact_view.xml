@@ -21,5 +21,16 @@
         android:textColor="@color/primary_dark_material_dark"
         android:layout_centerVertical="true"
         android:paddingLeft="@dimen/margin_huge"/>
+    
+    <TextView android:id="@+id/textViewLastMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewUserName"
+        android:layout_toRightOf="@id/imageViewStatus"
+        android:textColor="@color/background_floating_material_dark"
+        android:paddingTop="@dimen/margin_normal"
+        android:textSize="10dp"
+        android:paddingLeft="@dimen/margin_huge"
+        android:text="Hey Bob, it's Alice!"/>
 
 </com.pz.supportchat.contacts_list.ContactView>

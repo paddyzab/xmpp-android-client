@@ -19,6 +19,9 @@ public class ContactView extends RelativeLayout {
 
     @InjectView(R.id.imageViewStatus)
     protected ImageView imageViewStatus;
+    
+    @InjectView(R.id.textViewLastMessage)
+    protected TextView textViewLastMessage;
 
     public ContactView(final Context context) {
         this(context, null);
