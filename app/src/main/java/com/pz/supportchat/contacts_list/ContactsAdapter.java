@@ -1,7 +1,7 @@
 package com.pz.supportchat.contacts_list;
 
 import com.pz.supportchat.R;
-import com.pz.supportchat.commons.models.PresenceAwareRosterEntry;
+import com.pz.supportchat.commons.models.PresenceMessageAwareRosterEntry;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,11 +15,11 @@ import java.util.List;
 
 public class ContactsAdapter extends BaseAdapter {
 
-    private List<PresenceAwareRosterEntry> mRosterEntries;
+    private List<PresenceMessageAwareRosterEntry> mRosterEntries;
     private final LayoutInflater mLayoutInflater;
 
     public ContactsAdapter(final Context context,
-            final List<PresenceAwareRosterEntry> rosterEntries) {
+            final List<PresenceMessageAwareRosterEntry> rosterEntries) {
         mRosterEntries = rosterEntries;
         mLayoutInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -31,7 +31,7 @@ public class ContactsAdapter extends BaseAdapter {
     }
 
     @Override
-    public PresenceAwareRosterEntry getItem(int position) {
+    public PresenceMessageAwareRosterEntry getItem(int position) {
         return mRosterEntries.get(position);
     }
 
@@ -51,17 +51,24 @@ public class ContactsAdapter extends BaseAdapter {
             view = (ContactView) convertView;
         }
 
-        final PresenceAwareRosterEntry rosterEntry = getItem(position);
+        final PresenceMessageAwareRosterEntry rosterEntry = getItem(position);
         view.setData(rosterEntry, parent.getContext());
 
         return view;
     }
 
     public void switchContactAvailability(final String user, boolean available) {
-
-        for (final PresenceAwareRosterEntry rosterEntry : mRosterEntries) {
+        for (final PresenceMessageAwareRosterEntry rosterEntry : mRosterEntries) {
             if (StringUtils.equals(rosterEntry.getUser(), user)) {
                 mRosterEntries.get(mRosterEntries.indexOf(rosterEntry)).setPresence(available);
+            }
+        }
+    }
+
+    public void populateContactWithMessage(final String user, final String message) {
+        for (final PresenceMessageAwareRosterEntry rosterEntry : mRosterEntries) {
+            if (StringUtils.equals(rosterEntry.getUser(), user)) {
+                mRosterEntries.get(mRosterEntries.indexOf(rosterEntry)).setLastMessage(message);
             }
         }
     }

@@ -6,8 +6,10 @@ import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.R;
+import com.pz.supportchat.bus_events.NewMessageEvent;
 import com.pz.supportchat.bus_events.PresenceChangedEvent;
-import com.pz.supportchat.commons.models.PresenceAwareRosterEntry;
+import com.pz.supportchat.commons.models.InternalMessage;
+import com.pz.supportchat.commons.models.PresenceMessageAwareRosterEntry;
 import com.pz.supportchat.utils.StringUtils;
 import com.pz.supportchat.xmpp.RosterManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
@@ -77,8 +79,9 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final List<PresenceAwareRosterEntry> rosterEntries = Lists.newArrayList(mRosterManager
-                .getRosterEntries(mXMPPConnectionProvider.getConnection()));
+        final List<PresenceMessageAwareRosterEntry> rosterEntries = Lists
+                .newArrayList(mRosterManager
+                        .getRosterEntries(mXMPPConnectionProvider.getConnection()));
         contactsAdapter = new ContactsAdapter(ContactsActivity.this, rosterEntries);
         contactsListView.setAdapter(contactsAdapter);
 
@@ -116,6 +119,16 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
         contactsAdapter.switchContactAvailability(StringUtils.parseBareAddress(presence.getFrom()),
                 presence.isAvailable());
         contactsAdapter.notifyDataSetInvalidated();
+    }
+
+
+    @Subscribe
+    public void onNewMessageReceived(final NewMessageEvent newMessageEvent) {
+        final InternalMessage internalMessage = newMessageEvent.mInternalMessage;
+        contactsAdapter
+                .populateContactWithMessage(StringUtils.parseBareAddress(internalMessage.fromName),
+                        internalMessage.message);
+        contactsAdapter.notifyDataSetChanged();
     }
 
     @Override

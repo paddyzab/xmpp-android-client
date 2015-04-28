@@ -2,14 +2,18 @@ package com.pz.supportchat.commons.models;
 
 import org.jivesoftware.smack.roster.RosterEntry;
 
-public class PresenceAwareRosterEntry {
+public class PresenceMessageAwareRosterEntry {
 
+    public final static String EMPTY_STRING = "";
+    
     private final RosterEntry mRosterEntry;
     private boolean isPresent;
+    private String mLastMessage;
 
-    public PresenceAwareRosterEntry(final RosterEntry mRosterEntry) {
+    public PresenceMessageAwareRosterEntry(final RosterEntry mRosterEntry) {
         this.mRosterEntry = mRosterEntry;
         isPresent = false;
+        mLastMessage = EMPTY_STRING;
     }
 
     public String getName() {
@@ -28,6 +32,14 @@ public class PresenceAwareRosterEntry {
         return isPresent;
     }
 
+    public void setLastMessage(String lastMessage) {
+        mLastMessage = lastMessage;
+    }
+    
+    public String getLastMessage() {
+        return mLastMessage;
+    }
+    
     @Override
     public String toString() {
         return "PresenceAwareRosterEntry{" +

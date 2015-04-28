@@ -1,7 +1,7 @@
 package com.pz.supportchat.contacts_list;
 
 import com.pz.supportchat.R;
-import com.pz.supportchat.commons.models.PresenceAwareRosterEntry;
+import com.pz.supportchat.commons.models.PresenceMessageAwareRosterEntry;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -19,7 +19,7 @@ public class ContactView extends RelativeLayout {
 
     @InjectView(R.id.imageViewStatus)
     protected ImageView imageViewStatus;
-    
+
     @InjectView(R.id.textViewLastMessage)
     protected TextView textViewLastMessage;
 
@@ -41,8 +41,9 @@ public class ContactView extends RelativeLayout {
         ButterKnife.inject(this);
     }
 
-    public void setData(final PresenceAwareRosterEntry rosterEntry, final Context context) {
+    public void setData(final PresenceMessageAwareRosterEntry rosterEntry, final Context context) {
         textViewUserName.setText(rosterEntry.getName());
+        textViewLastMessage.setText(rosterEntry.getLastMessage());
         imageViewStatus.setBackgroundColor(setPresenceResource(rosterEntry.isPresent(), context));
     }
 

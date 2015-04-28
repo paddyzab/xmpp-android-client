@@ -30,7 +30,6 @@
         android:textColor="@color/background_floating_material_dark"
         android:paddingTop="@dimen/margin_normal"
         android:textSize="10dp"
-        android:paddingLeft="@dimen/margin_huge"
-        android:text="Hey Bob, it's Alice!"/>
+        android:paddingLeft="@dimen/margin_huge"/>
 
 </com.pz.supportchat.contacts_list.ContactView>
