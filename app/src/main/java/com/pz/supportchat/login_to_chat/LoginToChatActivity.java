@@ -1,5 +1,15 @@
 package com.pz.supportchat.login_to_chat;
 
+import com.pz.supportchat.InjectableActivity;
+import com.pz.supportchat.Intents;
+import com.pz.supportchat.PostingConnectionChangeListener;
+import com.pz.supportchat.R;
+import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
+import com.pz.supportchat.xmpp.XMPPConnectionProvider;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -7,19 +17,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import javax.inject.Inject;
+
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.pz.supportchat.InjectableActivity;
-import com.pz.supportchat.Intents;
-import com.pz.supportchat.MainThreadBus;
-import com.pz.supportchat.PostingConnectionChangeListener;
-import com.pz.supportchat.R;
-import com.pz.supportchat.notifications.NotificationsProvider;
-import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
-import com.pz.supportchat.xmpp.XMPPConnectionProvider;
-import javax.inject.Inject;
-import org.apache.commons.lang3.StringUtils;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+
 import static android.view.View.VISIBLE;
 import static com.pz.supportchat.PostingConnectionChangeListener.XMPPConnectionStatus;
 
@@ -39,12 +42,6 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
 
     @Inject
     protected LoginPresenterImpl mLoginPresenter;
-
-    @Inject
-    protected MainThreadBus mBus;
-
-    @Inject
-    protected NotificationsProvider mNotificationsProvider;
 
     @InjectView(R.id.editTextLogin)
     protected EditText editTextPickNickname;
