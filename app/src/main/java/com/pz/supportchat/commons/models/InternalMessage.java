@@ -1,14 +1,36 @@
 package com.pz.supportchat.commons.models;
 
-public class InternalMessage {
-    
-    public final String fromName;
-    public final String message;
-    public final boolean isSelf;
+import io.realm.RealmObject;
+import io.realm.annotations.Index;
 
-    public InternalMessage(final String fromName, final String message, final boolean isSelf) {
-        this.fromName = fromName;
+public class InternalMessage extends RealmObject {
+
+    @Index
+    private String message;
+    private Contact contact;
+    private boolean isSelf;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
+
+    public boolean isSelf() {
+        return isSelf;
+    }
+
+    public void setSelf(boolean isSelf) {
         this.isSelf = isSelf;
     }
 }

@@ -57,7 +57,7 @@ public class ChatActivity extends InjectableActivity {
 
     private void sendNewMessage() {
         final InternalMessage newInternalMessage = new InternalMessage(
-                mSharedPreferencesKeyValueStorage
+                contact, mSharedPreferencesKeyValueStorage
                         .getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY),
                 editTextInputMessage.getText().toString(),
                 true);

@@ -16,7 +16,7 @@ public class PostingMessageListener implements ChatMessageListener {
 
     @Override
     public void processMessage(final Chat chat, final Message message) {
-        final InternalMessage newInternalMessage = new InternalMessage(chat.getParticipant(),
+        final InternalMessage newInternalMessage = new InternalMessage(contact, chat.getParticipant(),
                 message.getBody(),
                 false);
 
