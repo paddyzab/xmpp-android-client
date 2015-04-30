@@ -1,25 +1,33 @@
 package com.pz.supportchat.current_chat;
 
-import android.app.FragmentManager;
-import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Toast;
-import butterknife.InjectView;
-import butterknife.OnClick;
 import com.google.common.collect.Lists;
+
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.R;
 import com.pz.supportchat.bus_events.NewMessageEvent;
+import com.pz.supportchat.commons.models.Contact;
 import com.pz.supportchat.commons.models.InternalMessage;
 import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
 import com.pz.supportchat.xmpp.ConnectionManager;
 import com.squareup.otto.Subscribe;
-import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
-import static com.pz.supportchat.current_chat.ChatDataFragment.*;
+
+import android.app.FragmentManager;
+import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import javax.inject.Inject;
+
+import butterknife.InjectView;
+import butterknife.OnClick;
+import io.realm.Realm;
+
+import static com.pz.supportchat.current_chat.ChatDataFragment.CHAT_DATA_FRAGMENT_KEY;
 
 public class ChatActivity extends InjectableActivity {
 
@@ -45,23 +53,28 @@ public class ChatActivity extends InjectableActivity {
     private String currentChatUser;
     private MessagesListAdapter messagesListAdapter;
 
+
+    private Contact currentUser;
+
     @OnClick(R.id.buttonSend)
     protected void sendMessage() {
         if (validateMessage()) {
             sendNewMessage();
             editTextInputMessage.setText(EMPTY_STRING);
         } else {
-            Toast.makeText(ChatActivity.this, "Hey, add a message before", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChatActivity.this, "Hey, add a message before", Toast.LENGTH_SHORT)
+                    .show();
         }
     }
 
     private void sendNewMessage() {
-        final InternalMessage newInternalMessage = new InternalMessage(
-                contact, mSharedPreferencesKeyValueStorage
-                        .getString(mSharedPreferencesKeyValueStorage.LOGIN_KEY),
-                editTextInputMessage.getText().toString(),
-                true);
-        messagesListAdapter.updateWithMessage(newInternalMessage);
+        final InternalMessage internalMessage = new InternalMessage();
+        internalMessage.setContact(currentUser);
+        internalMessage.setTime(System.currentTimeMillis());
+        internalMessage.setSelf(true);
+        internalMessage.setMessage(editTextInputMessage.getText().toString());
+
+        messagesListAdapter.updateWithMessage(internalMessage);
 
         mConnectionManager.sendMessage(editTextInputMessage.getText().toString(),
                 currentChatUser);
@@ -86,15 +99,22 @@ public class ChatActivity extends InjectableActivity {
         messagesListAdapter.notifyDataSetChanged();
 
         final FragmentManager fragmentManager = getFragmentManager();
-        chatDataFragment = (ChatDataFragment) fragmentManager.findFragmentByTag(CHAT_DATA_FRAGMENT_KEY);
+        chatDataFragment = (ChatDataFragment) fragmentManager
+                .findFragmentByTag(CHAT_DATA_FRAGMENT_KEY);
 
         if (chatDataFragment == null) {
             chatDataFragment = new ChatDataFragment();
-            fragmentManager.beginTransaction().add(chatDataFragment, CHAT_DATA_FRAGMENT_KEY).commit();
+            fragmentManager.beginTransaction().add(chatDataFragment, CHAT_DATA_FRAGMENT_KEY)
+                    .commit();
             chatDataFragment.setData(new ChatViewModel(messagesListAdapter.getMessages()));
         } else {
             messagesListAdapter.updateMessages(chatDataFragment.getData().mMessageList);
         }
+
+        currentUser = Realm.getInstance(this).createObject(Contact.class);
+        currentUser.setName("Paddy");
+        currentUser.setMddress("paddy.local");
+        currentUser.setMesource("SMACK");
     }
 
     @Subscribe

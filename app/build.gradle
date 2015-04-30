@@ -40,6 +40,7 @@ android {
         exclude 'LICENSE.txt'
         exclude 'NOTICE'
         exclude 'asm-license.txt'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 }
 

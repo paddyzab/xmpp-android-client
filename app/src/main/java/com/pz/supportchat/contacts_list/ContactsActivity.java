@@ -126,8 +126,8 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
     public void onNewMessageReceived(final NewMessageEvent newMessageEvent) {
         final InternalMessage internalMessage = newMessageEvent.mInternalMessage;
         contactsAdapter
-                .populateContactWithMessage(StringUtils.parseBareAddress(internalMessage.fromName),
-                        internalMessage.message);
+                .populateContactWithMessage(StringUtils.parseBareAddress(internalMessage.getContact().getName()),
+                        internalMessage.getMessage());
         contactsAdapter.notifyDataSetChanged();
     }
 

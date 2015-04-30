@@ -9,6 +9,15 @@ public class InternalMessage extends RealmObject {
     private String message;
     private Contact contact;
     private boolean isSelf;
+    private long time;
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
 
     public String getMessage() {
         return message;

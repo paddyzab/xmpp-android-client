@@ -45,9 +45,9 @@ public class MessageView extends RelativeLayout {
     }
 
     public void setData(final InternalMessage internalMessage) {
-        textViewMessage.setText(internalMessage.message);
-        textViewMessageFrom.setText(StringUtils.parseBareUsername(internalMessage.fromName));
-        setMessageBackground(relativeLayoutContainer, internalMessage.isSelf);
+        textViewMessage.setText(internalMessage.getMessage());
+        textViewMessageFrom.setText(StringUtils.parseBareUsername(internalMessage.getContact().getName()));
+        setMessageBackground(relativeLayoutContainer, internalMessage.isSelf());
     }
 
     private void setMessageBackground(final RelativeLayout relativeLayoutContainer,
