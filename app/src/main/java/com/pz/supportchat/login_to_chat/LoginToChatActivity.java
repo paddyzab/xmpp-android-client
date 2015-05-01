@@ -88,6 +88,8 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
         super.onResume();
         mLoginPresenter.onResume();
         makeConnectionAwareComponentsEnable(mConnection.isConnected());
+
+        relogin();
     }
 
     @Override
@@ -100,6 +102,8 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
     public void connectionChanged(final XMPPConnectionStatus status) {
         makeConnectionAwareComponentsEnable(
                 StringUtils.equals(status.mStatus, PostingConnectionChangeListener.CONNECTED));
+
+        relogin();
     }
 
     @Override
@@ -154,4 +158,10 @@ public class LoginToChatActivity extends InjectableActivity implements LoginView
                 : getResources().getColor(R.color.red));
     }
 
+    private void relogin() {
+        if (mConnection.isConnected() && mSharedPreferencesKeyValueStorage.containsLoginCredentials()) {
+            mLoginPresenter.validateCredentials(mSharedPreferencesKeyValueStorage.LOGIN_KEY,
+                    mSharedPreferencesKeyValueStorage.PASSWORD_KEY);
+        }
+    }
 }
