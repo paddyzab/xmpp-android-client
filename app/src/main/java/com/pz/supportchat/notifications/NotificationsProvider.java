@@ -21,14 +21,14 @@ public class NotificationsProvider {
     }
 
     public Notification getNewMessageNotification(final Context context,
-                                                  final InternalMessage message) {
+            final InternalMessage message) {
 
         final NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(android.R.drawable.ic_dialog_email)
                         .setContentTitle(getFormattedUserString(message))
                         .setContentText(message.getMessage());
-        final Intent resultIntent = mIntents.getCurrentChatIntent(context, message.getContact().getName());
+        final Intent resultIntent = mIntents.getCurrentChatIntent(context, message.getFrom());
 
         final TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(ChatActivity.class);
@@ -45,7 +45,7 @@ public class NotificationsProvider {
     }
 
     private String getFormattedUserString(InternalMessage message) {
-        return "New message from: " + StringUtils.parseBareUsername(message.getContact().getName());
+        return "New message from: " + StringUtils.parseBareUsername(message.getFrom());
     }
 
 }

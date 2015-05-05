@@ -7,9 +7,7 @@ import com.pz.supportchat.Intents;
 import com.pz.supportchat.MainThreadBus;
 import com.pz.supportchat.R;
 import com.pz.supportchat.bus_events.NewMessageEvent;
-import com.pz.supportchat.commons.models.Contact;
 import com.pz.supportchat.commons.models.InternalMessage;
-import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
 import com.pz.supportchat.xmpp.ConnectionManager;
 import com.squareup.otto.Subscribe;
 
@@ -25,7 +23,6 @@ import javax.inject.Inject;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
-import io.realm.Realm;
 
 import static com.pz.supportchat.current_chat.ChatDataFragment.CHAT_DATA_FRAGMENT_KEY;
 
@@ -40,9 +37,6 @@ public class ChatActivity extends InjectableActivity {
     protected ConnectionManager mConnectionManager;
 
     @Inject
-    protected SharedPreferencesKeyValueStorage mSharedPreferencesKeyValueStorage;
-
-    @Inject
     protected ChatDataFragment chatDataFragment;
 
     @InjectView(R.id.listViewMessages)
@@ -53,8 +47,6 @@ public class ChatActivity extends InjectableActivity {
     private String currentChatUser;
     private MessagesListAdapter messagesListAdapter;
 
-
-    private Contact currentUser;
 
     @OnClick(R.id.buttonSend)
     protected void sendMessage() {
@@ -69,7 +61,6 @@ public class ChatActivity extends InjectableActivity {
 
     private void sendNewMessage() {
         final InternalMessage internalMessage = new InternalMessage();
-        internalMessage.setContact(currentUser);
         internalMessage.setTime(System.currentTimeMillis());
         internalMessage.setSelf(true);
         internalMessage.setMessage(editTextInputMessage.getText().toString());
@@ -110,11 +101,6 @@ public class ChatActivity extends InjectableActivity {
         } else {
             messagesListAdapter.updateMessages(chatDataFragment.getData().mMessageList);
         }
-
-        currentUser = Realm.getInstance(this).createObject(Contact.class);
-        currentUser.setName("Paddy");
-        currentUser.setMddress("paddy.local");
-        currentUser.setMesource("SMACK");
     }
 
     @Subscribe

@@ -1,15 +1,19 @@
 package com.pz.supportchat.commons.models;
 
-import io.realm.RealmObject;
-import io.realm.annotations.Index;
+public class InternalMessage {
 
-public class InternalMessage extends RealmObject {
-
-    @Index
     private String message;
-    private Contact contact;
     private boolean isSelf;
     private long time;
+    private String from;
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
 
     public long getTime() {
         return time;
@@ -25,14 +29,6 @@ public class InternalMessage extends RealmObject {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public Contact getContact() {
-        return contact;
-    }
-
-    public void setContact(Contact contact) {
-        this.contact = contact;
     }
 
     public boolean isSelf() {
