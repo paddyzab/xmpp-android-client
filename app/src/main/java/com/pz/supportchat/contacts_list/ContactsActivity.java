@@ -1,7 +1,15 @@
 package com.pz.supportchat.contacts_list;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import com.google.common.collect.Lists;
-
 import com.pz.supportchat.InjectableActivity;
 import com.pz.supportchat.Intents;
 import com.pz.supportchat.MainThreadBus;
@@ -10,27 +18,14 @@ import com.pz.supportchat.bus_events.NewMessageEvent;
 import com.pz.supportchat.bus_events.PresenceChangedEvent;
 import com.pz.supportchat.commons.models.InternalMessage;
 import com.pz.supportchat.commons.models.PresenceMessageAwareRosterEntry;
+import com.pz.supportchat.storage.SharedPreferencesKeyValueStorage;
 import com.pz.supportchat.utils.StringUtils;
 import com.pz.supportchat.xmpp.RosterManager;
 import com.pz.supportchat.xmpp.XMPPConnectionProvider;
 import com.squareup.otto.Subscribe;
-
-import org.jivesoftware.smack.packet.Presence;
-
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
-import butterknife.InjectView;
-import butterknife.OnClick;
+import org.jivesoftware.smack.packet.Presence;
 
 public class ContactsActivity extends InjectableActivity implements AddContactDialogListener {
 
@@ -56,6 +51,9 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
     @Inject
     protected Intents mIntents;
 
+    @Inject
+    protected SharedPreferencesKeyValueStorage mStorage;
+
     @OnClick(R.id.buttonAddContact)
     protected void addContact() {
         final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -78,6 +76,15 @@ public class ContactsActivity extends InjectableActivity implements AddContactDi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //if user is not logged in move to login screen
+        if(!mStorage.containsLoginCredentials()) {
+            startActivity(mIntents.getLoginIntent(ContactsActivity.this));
+        } else {
+            // we were logged in so we can add stuff to the view.
+            // TODO: silent login needed
+        }
+
 
         final List<PresenceMessageAwareRosterEntry> rosterEntries = Lists
                 .newArrayList(mRosterManager

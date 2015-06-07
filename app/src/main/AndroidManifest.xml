@@ -14,20 +14,18 @@
 
         <activity
                 android:name=".login_to_chat.LoginToChatActivity"
-                android:label="@string/login_to_chat">
+                android:label="@string/login_to_chat"/>
+        <activity
+                android:name=".current_chat.ChatActivity"
+                android:label="@string/current_chat"/>
+        <activity
+                android:name=".contacts_list.ContactsActivity"
+                android:label="@string/contacts">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity
-                android:name=".current_chat.ChatActivity"
-                android:label="@string/current_chat"/>
-
-        <activity
-                android:name=".contacts_list.ContactsActivity"
-                android:label="@string/contacts"/>
 
         <service
                 android:name=".xmpp.ChatService"

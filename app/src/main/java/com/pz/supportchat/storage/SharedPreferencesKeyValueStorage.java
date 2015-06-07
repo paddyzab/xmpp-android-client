@@ -8,10 +8,6 @@ import android.text.TextUtils;
 public class SharedPreferencesKeyValueStorage implements KeyValueStorage {
 
     private final SharedPreferences mSharedPreferences;
-    private final String EMPTY_STRING = "";
-
-    public final String PASSWORD_KEY = "_password";
-    public final String LOGIN_KEY = "_login";
 
     public SharedPreferencesKeyValueStorage(final Context context, final String fileName) {
         mSharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
@@ -26,7 +22,7 @@ public class SharedPreferencesKeyValueStorage implements KeyValueStorage {
 
     @Override
     public final void storeString(final String key, final String value) {
-        final  Editor editor = mSharedPreferences.edit();
+        final Editor editor = mSharedPreferences.edit();
         editor.putString(key, value);
         editor.apply();
     }

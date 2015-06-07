@@ -70,7 +70,6 @@ dependencies {
     androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
 
-    androidTestCompile 'junit:junit:4.12'
 
 }
 
